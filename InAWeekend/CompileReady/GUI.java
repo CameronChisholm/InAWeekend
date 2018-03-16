@@ -644,6 +644,7 @@ public class GUI extends JFrame implements ActionListener
 		    "", promptUser
 		};
 
+		//int option = JOptionPane.showConfirmDialog(null, newUserInformation, "User Input Error", JOptionPane.OK_CANCEL_OPTION);
 		int option = JOptionPane.showConfirmDialog(null, newUserInformation, "User Input Error", JOptionPane.OK_CANCEL_OPTION);
 	}
 /*
@@ -765,7 +766,7 @@ public class GUI extends JFrame implements ActionListener
 			myTabs.addTab("Create an Account",createAnAccountTab);
 
 		}
-/*
+
 		else if(e.getSource()==btSubmitUserDetails)
 		{
 			String username = tfEnterUsr.getText();
@@ -778,18 +779,22 @@ public class GUI extends JFrame implements ActionListener
 			
 			if(validationCheck)
 			{
-				GenerateAccount newUser = new GenerateAccount(username,password);
+				User newUser = new User();
 				newUser.assignID();
-				newUser.saveNewUserDetails(newUser);
-
-				myTabs.remove(0);
-				myTabs.addTab("Login",loginTab);
-				this.setLayout(new GridLayout(1,1));
-				this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				this.setSize(800,500);
-				this.setVisible(true);
-		
-				this.add(myTabs);
+				System.out.println(newUser.getUserID());
+				
+				/*
+					After the user has created an account,
+					the fields are reset.
+				*/
+				tfEnterUsr.setText("");
+				pfEnterPasswd.setText("");
+				pfReEnterPasswd.setText("");
+				
+				// A confirmation message is produced.
+				String message = "Hi, "+username+". You account has been created";
+				setUpPopUpBox(message);
+				
 			}
 
 			else
@@ -798,7 +803,7 @@ public class GUI extends JFrame implements ActionListener
 			}
 			
 		}
-		*/
+		
 
 		else if(e.getSource()==btBack)
 		{

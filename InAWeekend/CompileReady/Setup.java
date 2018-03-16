@@ -2,14 +2,37 @@ public class Setup
 {
 	public static void main(String[] args)
 	{
-		GUI newInstance = new GUI();
+		Setup beforeStartUp = new Setup();
+		beforeStartUp.checkFiles();
 		
+		GUI newInstance = new GUI();
 		newInstance.startGUI();
 
 	//	FencerList testing2 = new FencerList();
 	}
 
-
+	
+	/*
+		Method: checkFiles()
+		Checks that all the files needed for the
+		system to operate exist.
+		If they do not (e.g. first time start up)
+		they will be generated.
+	*/
+	public void checkFiles()
+	{
+		String filename;
+		boolean fileExist = false;
+		// Checking the file userDetails.txt exists
+		filename = "userDetails.txt";
+		
+		fileExist = ReadWriteToTxt.checkFile(filename);
+		
+		if(fileExist == false)
+		{
+			ReadWriteToTxt.write(filename,"");
+		}
+	}
 /*
 	public static boolean checkUserDetails(String tempUsername,String tempPassword)
 	{
