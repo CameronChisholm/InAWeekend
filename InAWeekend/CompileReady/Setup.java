@@ -32,6 +32,15 @@ public class Setup
 		{
 			ReadWriteToTxt.write(filename,"");
 		}
+
+		filename = "fightData.txt";
+
+		fileExist = ReadWriteToTxt.checkFile(filename);
+
+		if(fileExist == false)
+		{
+			ReadWriteToTxt.write(filename,"");
+		}
 	}
 /*
 	public static boolean checkUserDetails(String tempUsername,String tempPassword)

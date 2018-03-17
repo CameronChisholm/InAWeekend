@@ -66,6 +66,7 @@ public class GUI extends JFrame implements ActionListener
 	private JLabel lblPromptWinner = new JLabel();
 	private JLabel lblPromptLoser = new JLabel();	
 	private JLabel lblPromptLoserScore = new JLabel();
+	private JLabel lblLoserScoreCustom = new JLabel();
 
 	private JComboBox cbScoreLimit;
 
@@ -74,6 +75,7 @@ public class GUI extends JFrame implements ActionListener
 	private JComboBox cbLoserScore;
 
 	private JTextField tfScoreLimitCustom = new JTextField(6);
+	private JTextField tfLoserScoreCustom = new JTextField(6);
 
 	private DefaultTableModel fightsTableModel;
 	private JTable fightsTable;
@@ -396,7 +398,7 @@ public class GUI extends JFrame implements ActionListener
 		//rankingTableTab.add(lblRankingTableTabDescription);
 		rankingTableTab.add(rankingTableScroll);
 	}
-
+*/
 	public void setupHomePage()
 	{
 		lblPageTitle.setLocation(10,0);
@@ -466,6 +468,12 @@ public class GUI extends JFrame implements ActionListener
 		lblPromptLoserScore.setFont(new Font("Courier",Font.PLAIN,20));
 		lblPromptLoserScore.setText("Select Loser Score");
 
+		lblLoserScoreCustom.setLocation(200,450);
+		lblLoserScoreCustom.setSize(200,25);
+		lblLoserScoreCustom.setOpaque(true);
+		lblLoserScoreCustom.setFont(new Font("Courier",Font.PLAIN,15));
+		lblLoserScoreCustom.setText("Custom:");
+
 		btSubmit.setLocation(100,500);
 		btSubmit.setSize(200,50);
 		btSubmit.addActionListener(this);
@@ -485,10 +493,13 @@ public class GUI extends JFrame implements ActionListener
 		btDelete.setText("Delete");
 
 		tfScoreLimitCustom.setBounds(270,115,50,25);	
+		tfLoserScoreCustom.setBounds(270,450,50,25);	
 
-		String[] allUserNames = HomePage.getAllUserNames();
+		UserList userLoggedIn = new UserList();
+		String[] allUserNames = userLoggedIn.getAllFencerNames();
 
 		String[] DataCBScoreLimit = {
+								"-",
 								"5",
 								"10",
 								"15"
@@ -498,14 +509,14 @@ public class GUI extends JFrame implements ActionListener
 
 		String[] DataCBLoser = allUserNames;
 
-		String[] DataCBLoserScore = new String[15];
+		String[] DataCBLoserScore = new String[17];
 		
-		for(int i=0;i<15;i++)
+		DataCBLoserScore[0] = "-";
+
+		for(int i=1;i<17;i++)
 		{
-			DataCBLoserScore[i] = Integer.toString(i+1);
+			DataCBLoserScore[i] = Integer.toString(i-1);
 		}
-
-
 
 		cbScoreLimit = new JComboBox(DataCBScoreLimit);
 		cbWinner = new JComboBox(DataCBWinner);
@@ -517,7 +528,7 @@ public class GUI extends JFrame implements ActionListener
 		cbLoser.setBounds(10,350,100,25);
 		cbLoserScore.setBounds(10,450,50,25);
 
-
+		/*
 		String[] headings = {"Winner","Winner Points","Loser","Loser Points"};
 
 		boolean areThereFights = false;
@@ -541,9 +552,12 @@ public class GUI extends JFrame implements ActionListener
 
 		fightsTableScroll.setSize(300,400);
 		fightsTableScroll.setLocation(400,50);
+		*/
 
 		fightsTab.add(btSubmit);
-		fightsTab.add(fightsTableScroll);
+		fightsTab.add(tfLoserScoreCustom);
+		fightsTab.add(lblLoserScoreCustom);
+		//fightsTab.add(fightsTableScroll);
 		fightsTab.add(cbLoserScore);
 		fightsTab.add(lblPromptLoserScore);
 		fightsTab.add(cbLoser);
@@ -562,7 +576,7 @@ public class GUI extends JFrame implements ActionListener
 		
 	}
 
-
+/*
 	public void updateFightTable(
 		String tempWinner,
 		String tempLoser,
@@ -647,7 +661,26 @@ public class GUI extends JFrame implements ActionListener
 		//int option = JOptionPane.showConfirmDialog(null, newUserInformation, "User Input Error", JOptionPane.OK_CANCEL_OPTION);
 		int option = JOptionPane.showConfirmDialog(null, newUserInformation, "User Input Error", JOptionPane.OK_CANCEL_OPTION);
 	}
-/*
+
+	public boolean doPasswordsMatch(String password1, String password2)
+	{
+		boolean match = false;
+
+		if(password1.equals(password2))
+		{
+			match = true;
+		}
+
+		return match;
+	}
+
+	public void resetCreateAnAccountFields()
+	{
+		tfEnterUsr.setText("");
+		pfEnterPasswd.setText("");
+		pfReEnterPasswd.setText("");	
+	}
+
 	public void displaySystem(String tempPermission)
 	{
 		permissions = tempPermission;
@@ -658,11 +691,11 @@ public class GUI extends JFrame implements ActionListener
 			
 			setUpFightsTab();
 			setupHomePage();
-			setupRankingTable();
+			//setupRankingTable();
 			
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
-			myTabs.addTab("Ranking Table",rankingTableTab);
+			//myTabs.addTab("Ranking Table",rankingTableTab);
 			
 
 			this.setLayout(new GridLayout(1,1));
@@ -677,11 +710,11 @@ public class GUI extends JFrame implements ActionListener
 
 			setUpFightsTab();
 			setupHomePage();
-			setupRankingTable();
+			//setupRankingTable();
 
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
-			myTabs.addTab("Ranking Table",rankingTableTab);
+			//myTabs.addTab("Ranking Table",rankingTableTab);
 			
 
 			this.setLayout(new GridLayout(1,1));
@@ -695,10 +728,10 @@ public class GUI extends JFrame implements ActionListener
 			myTabs.remove(0);
 			setUpFightsTab();
 			setupHomePage();
-			setupRankingTable();
+			//setupRankingTable();
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
-			myTabs.addTab("Ranking Table",rankingTableTab);
+			//myTabs.addTab("Ranking Table",rankingTableTab);
 			
 
 			this.setLayout(new GridLayout(1,1));
@@ -712,10 +745,10 @@ public class GUI extends JFrame implements ActionListener
 			myTabs.remove(0);
 			setUpFightsTab();
 			setupHomePage();
-			setupRankingTable();
+			//setupRankingTable();
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
-			myTabs.addTab("Ranking Table",rankingTableTab);
+			//myTabs.addTab("Ranking Table",rankingTableTab);
 			
 
 			this.setLayout(new GridLayout(1,1));
@@ -726,26 +759,36 @@ public class GUI extends JFrame implements ActionListener
 		}
 		
 	}
-*/
+
 	public void actionPerformed(ActionEvent e)
  	{
 /*
  		String[] recordClickedOn = new String[4];
  		String field;
-
+*/
  		if(e.getSource()==btLogin)
 		{
-			
-			System.out.println("login");
+			UserList existingUser = new UserList();
+			User user = new User();
 
+			String hashedPassword;
 			String username = tfUsr.getText();
 			String password = pfPasswd.getText();
 
-			boolean checkSuccessful = Login.checkUserDetails(username,password);
+			user.setPassword(password);
+			user.hashUserPassword();
+			hashedPassword = user.getHashedPassword();
+
+			boolean usernameMatch = existingUser.search(username,0);
+			boolean passwordMatch = existingUser.search(hashedPassword,1); 
+
+			boolean checkSuccessful = usernameMatch&&passwordMatch;
 
 			if(checkSuccessful)
 			{
 				displaySystem("Fencer");
+				setUpPopUpBox("Login Successful");
+
 							
 			}
 
@@ -757,7 +800,7 @@ public class GUI extends JFrame implements ActionListener
 
 
 		}
-*/
+
 		if(e.getSource()==btCreateAnAccount)
 		{
 			myTabs.remove(0);		
@@ -769,27 +812,38 @@ public class GUI extends JFrame implements ActionListener
 
 		else if(e.getSource()==btSubmitUserDetails)
 		{
+			User newUser = new User();
+			UserList savingNewUser = new UserList();
+
+			boolean passwordsMatch;
+			boolean uniqueUsername;
+			boolean validationCheck = true;
 			String username = tfEnterUsr.getText();
 			String password = pfEnterPasswd.getText();
+			String reEnteredPassword = pfReEnterPasswd.getText(); 
 
-			boolean validationCheck = true;
-
-			// Perform validation on the new data
-			validationCheck = validateUserDetails(username,password);
 			
-			if(validationCheck)
+
+			// Performs validation on the new data
+			validationCheck = validateUserDetails(username,password);
+			// Checks that the passwords match, so wrong password is not saved
+			passwordsMatch = doPasswordsMatch(password,reEnteredPassword);
+			// Unique Username Check
+			uniqueUsername = !(savingNewUser.search(username,0));
+			
+			if((validationCheck&&passwordsMatch)&&uniqueUsername)
 			{
-				User newUser = new User();
-				newUser.assignID();
-				System.out.println(newUser.getUserID());
+				newUser.setPassword(password);
+				newUser.setUsername(username);
+				newUser.buildNewUserAccount();
+				savingNewUser.saveNewUserDetails(newUser);
+
 				
 				/*
 					After the user has created an account,
 					the fields are reset.
 				*/
-				tfEnterUsr.setText("");
-				pfEnterPasswd.setText("");
-				pfReEnterPasswd.setText("");
+				resetCreateAnAccountFields();
 				
 				// A confirmation message is produced.
 				String message = "Hi, "+username+". You account has been created";
@@ -799,7 +853,19 @@ public class GUI extends JFrame implements ActionListener
 
 			else
 			{
-				setUpPopUpBox("Please make sure you follow the validation rules.");
+				if(passwordsMatch == false)
+				{
+					setUpPopUpBox("Passwords do not match, please try again.");
+
+				}
+				else if(validationCheck == false)
+				{
+					setUpPopUpBox("Please make sure you follow the validation rules.");
+				}
+				else
+				{
+					setUpPopUpBox("That username already exists, please make yours unique in some way.");	
+				}
 			}
 			
 		}
@@ -807,10 +873,12 @@ public class GUI extends JFrame implements ActionListener
 
 		else if(e.getSource()==btBack)
 		{
+
 			myTabs.remove(0);		
 			setUpLoginTab();
 			this.setSize(800,500);
 			myTabs.addTab("Login",loginTab);
+			resetCreateAnAccountFields();
 
 		}
 /*
@@ -822,9 +890,97 @@ public class GUI extends JFrame implements ActionListener
 			myTabs.addTab("Login",loginTab);
 		}
 
-
+*/
 		else if(e.getSource()==btSubmit)
 		{
+			/*
+				Validation of the drop-boxes
+				and text fields when adding a fight.
+			*/
+
+			String winnerName = cbWinner.getSelectedItem().toString();
+			String loserName = cbLoser.getSelectedItem().toString();
+
+			String winnerScore = "";
+			String loserScore = "";
+			int winnerScoreInt = 0;
+			int loserScoreInt = 0;;
+			boolean cbScoreLimitPopulated = !cbScoreLimit.getSelectedItem().toString().equals("-"); 
+			boolean tfScoreLimitCustomPopulated = !tfScoreLimitCustom.getText().equals("");
+
+			boolean cbLoserScorePopulated = !cbLoserScore.getSelectedItem().toString().equals("-"); 
+			boolean tfLoserScoreCustomPopulated = !tfLoserScoreCustom.getText().equals("");
+
+			if((cbScoreLimitPopulated)&&(tfScoreLimitCustomPopulated))
+			{
+				setUpPopUpBox("Only enter a score limit in either the suggested or custom boxes.");
+			}
+			else if((cbLoserScorePopulated)&&(tfLoserScoreCustomPopulated))
+			{
+				setUpPopUpBox("Only enter the losers score limit in either the drop down or custom boxes.");
+			}
+			else
+			{
+				if(cbScoreLimitPopulated)
+				{
+					winnerScore = cbScoreLimit.getSelectedItem().toString();
+				}
+				else if(tfScoreLimitCustomPopulated)
+				{
+					winnerScore = tfScoreLimitCustom.getText();
+				}
+				if(cbLoserScorePopulated)
+				{
+					loserScore = cbLoserScore.getSelectedItem().toString();
+				}
+				else if(tfLoserScoreCustomPopulated)
+				{	
+					loserScore = tfLoserScoreCustom.getText();
+				}
+				else
+				{
+					setUpPopUpBox("Enter the loser score and the score limit.");
+				}
+			}
+
+			try
+			{
+				winnerScoreInt = Integer.parseInt(winnerScore);
+				loserScoreInt = Integer.parseInt(loserScore);
+			}
+			catch(Exception ex)
+			{
+				setUpPopUpBox("Only enter integer scores.");
+			}
+
+			if(winnerScoreInt<loserScoreInt)
+			{
+				setUpPopUpBox("Loser score cannot be greater than the score limit.");
+			}
+			else if(winnerScoreInt==loserScoreInt)
+			{
+				setUpPopUpBox("Loser score cannot be the same as the score limit.");
+			}
+			else if(winnerName.equals(loserName))
+			{
+				setUpPopUpBox("The fencers cannot be the same.");
+			}
+			else
+			{
+				Fight newFight = new Fight();
+				FightList fight = new FightList();
+				newFight.setWinnerName(winnerName);
+				newFight.setLoserName(loserName);
+				newFight.setLoserPts(loserScore);
+				newFight.setWinnerPts(winnerScore);
+
+				newFight.processNewFight();
+				fight.storeFight(newFight);
+
+
+			}
+
+			/*
 			// Creating a new instance of a Fight.
 
 			GenerateFight newFight;
@@ -858,9 +1014,10 @@ public class GUI extends JFrame implements ActionListener
 			newFight.processFightScores();
 
 			newFight.storeFight();
+			*/
 		}
 
-		
+/*		
 		
 		else if(e.getSource()==btEdit)
 		{
