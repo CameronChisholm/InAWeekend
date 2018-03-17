@@ -50,12 +50,20 @@ public class FightList
 		loserIDNo = tempFight.getLoserID();
 		winnerPts = tempFight.getWinnerPts();
 		loserPts = tempFight.getLoserPts();
+		verificationStatus = tempFight.getVerificationStatus();
 		fightID = Integer.toString(tempFight.getFightID());
 
 		String fightData = winnerExtraRankingPts+","+
-							loserExtraRankingPts
+							loserExtraRankingPts+","+
+							winnerIDNo+","+
+							loserIDNo+","+
+							winnerPts+","+
+							loserPts+","+
+							verificationStatus+","+
+							fightID+","+"-1";
+							
 
-		ReadWriteToTxt.write(filename)
+		ReadWriteToTxt.write(filename,fightData);
 
 	}
 	

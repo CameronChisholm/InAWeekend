@@ -14,7 +14,7 @@ public class Fight
 	private String winnerPts;
 	private String loserPts;
 	private int fightID;
-
+	private String verificationStatus;
 	
 
 	/*
@@ -23,6 +23,7 @@ public class Fight
 	*/
 	public void processNewFight()
 	{
+		verificationStatus = "unverified by both fencers"
 		assignID();
 		findFencersID();
 		findFencersCurrentRankingPts();
@@ -163,6 +164,11 @@ public class Fight
 	public int getFightID()
 	{
 		return fightID;
+	}
+
+	public String getVerificationStatus()
+	{
+		return verificationStatus;
 	}
 
 
