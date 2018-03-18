@@ -43,6 +43,8 @@ public class FightList
 	{
 		String winnerExtraRankingPts,loserExtraRankingPts;
 		String winnerIDNo,loserIDNo,winnerPts,loserPts,fightID;
+		String[] verificationStatus;
+		String verificationStatusStr;
 		
 		winnerExtraRankingPts = tempFight.getWinnerExtraRankingPts();
 		loserExtraRankingPts = tempFight.getLoserExtraRankingPts();
@@ -53,13 +55,15 @@ public class FightList
 		verificationStatus = tempFight.getVerificationStatus();
 		fightID = Integer.toString(tempFight.getFightID());
 
+		verificationStatusStr = verificationStatus[0]+"-"+verificationStatus[1];
+
 		String fightData = winnerExtraRankingPts+","+
 							loserExtraRankingPts+","+
 							winnerIDNo+","+
 							loserIDNo+","+
 							winnerPts+","+
 							loserPts+","+
-							verificationStatus+","+
+							verificationStatusStr+","+
 							fightID+","+"-1";
 							
 

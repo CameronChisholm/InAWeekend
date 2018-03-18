@@ -14,7 +14,7 @@ public class Fight
 	private String winnerPts;
 	private String loserPts;
 	private int fightID;
-	private String verificationStatus;
+	private String[] verificationStatus;
 	
 
 	/*
@@ -22,8 +22,7 @@ public class Fight
 		a fight.
 	*/
 	public void processNewFight()
-	{
-		verificationStatus = "unverified by both fencers"
+	{		
 		assignID();
 		findFencersID();
 		findFencersCurrentRankingPts();
@@ -33,16 +32,18 @@ public class Fight
 	public void calculateRankingPts()
 	{
 		RankingPointsAlgorithm newFight = new RankingPointsAlgorithm();
-		newFight.setRankingPoints1(winnerCurrentRankingPts);
-		newFight.setRankingPoints2(loserCurrentRankingPts);
+		System.out.println(winnerCurrentRankingPts);
+		System.out.println(loserCurrentRankingPts);
+		newFight.setRankingPoints1(Integer.parseInt(winnerCurrentRankingPts));
+		newFight.setRankingPoints2(Integer.parseInt(loserCurrentRankingPts));
 
 		newFight.setScore1(Integer.parseInt(winnerPts));
 		newFight.setScore2(Integer.parseInt(loserPts));
 
 		calculateRankingPts();
 
-		winnerExtraRankingPts = newFight.getRankingPoints1();
-		loserExtraRankingPts = newFight.getRankingPoints2();
+		winnerExtraRankingPts = Integer.toString(newFight.getRankingPoints1());
+		loserExtraRankingPts = Integer.toString(newFight.getRankingPoints2());
 	}
 
 	public void assignID()
@@ -110,8 +111,11 @@ public class Fight
 		winner.setUsername(winnerName);
 		loser.setUsername(loserName);
 
-		winnerCurrentRankingPts = winner.findRankingPts();
-		loserCurrentRankingPts = loser.findRankingPts();
+		winner.findRankingPts();
+		loser.findRankingPts();
+
+		winnerCurrentRankingPts = Integer.toString(winner.getUserRankingPts());
+		loserCurrentRankingPts = Integer.toString(loser.getUserRankingPts());
 
 	}
 
@@ -166,11 +170,14 @@ public class Fight
 		return fightID;
 	}
 
-	public String getVerificationStatus()
+	public String[] getVerificationStatus()
 	{
 		return verificationStatus;
 	}
-
+	public void setVerificationStatus(String[] tempVerificationStatus)
+	{
+		verificationStatus = tempVerificationStatus;
+	}
 
 	
 

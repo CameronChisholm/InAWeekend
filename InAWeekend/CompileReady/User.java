@@ -146,11 +146,12 @@ public class User
 	public void findRankingPts()
 	{
 		UserList user = new UserList();
+		String userIDStr = Integer.toString(userID);
 
-		boolean doesUserExist = user.search(userID,3);
+		boolean doesUserExist = user.search(userIDStr,3);
 		if(doesUserExist)
 		{
-			userRankingPts = Integer.parseInt(user.searchAndReturnData(userID,3,2));
+			userRankingPts = Integer.parseInt(user.searchAndReturnData(userIDStr,3,2));
 		}
 		else
 		{

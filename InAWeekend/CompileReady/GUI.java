@@ -6,6 +6,7 @@ import javax.swing.table.*;
 
 public class GUI extends JFrame implements ActionListener 
 {
+	User currentUser;
 	/*
 	All attributes regarding the current user.
 	*/
@@ -786,10 +787,15 @@ public class GUI extends JFrame implements ActionListener
 
 			if(checkSuccessful)
 			{
+				user.setUsername(username);
+				user.findID();
+				user.findRankingPts();
+
 				displaySystem("Fencer");
 				setUpPopUpBox("Login Successful");
+				
 
-							
+
 			}
 
 			else if(checkSuccessful==false)
@@ -798,7 +804,7 @@ public class GUI extends JFrame implements ActionListener
 				setUpPopUpBox("Incorrect details, please try again.");
 			}
 
-
+			currentUser = user;
 		}
 
 		if(e.getSource()==btCreateAnAccount)
@@ -873,7 +879,6 @@ public class GUI extends JFrame implements ActionListener
 
 		else if(e.getSource()==btBack)
 		{
-
 			myTabs.remove(0);		
 			setUpLoginTab();
 			this.setSize(800,500);
@@ -895,11 +900,32 @@ public class GUI extends JFrame implements ActionListener
 		{
 			/*
 				Validation of the drop-boxes
-				and text fields when adding a fight.
+				and text fields when adding a fight.  
 			*/
-
+			String loggedInUser = currentUser.getUsername();
 			String winnerName = cbWinner.getSelectedItem().toString();
 			String loserName = cbLoser.getSelectedItem().toString();
+			String[] verificationStatus = new String[] {"",""};
+			/*
+				This is to see if the current user logged in,
+			 	is one of the fencers in the fight. If they are in the fight,
+			 	then only one other person will have to verify the fight.
+			*/
+			System.out.println(loggedInUser);
+			System.out.println(winnerName);
+			System.out.println(loserName);
+			boolean didCurrentUserFight = (loggedInUser.equals(winnerName))||(loggedInUser.equals(loserName));
+			if(didCurrentUserFight)
+			{
+				verificationStatus = new String[] {"0",""};
+			}
+
+
+			else
+			{
+				verificationStatus = new String[] {winnerName,loserName};
+			}
+
 
 			String winnerScore = "";
 			String loserScore = "";
@@ -973,6 +999,7 @@ public class GUI extends JFrame implements ActionListener
 				newFight.setLoserName(loserName);
 				newFight.setLoserPts(loserScore);
 				newFight.setWinnerPts(winnerScore);
+				newFight.setVerificationStatus(verificationStatus);
 
 				newFight.processNewFight();
 				fight.storeFight(newFight);
