@@ -26,21 +26,21 @@ public class Fight
 		assignID();
 		findFencersID();
 		findFencersCurrentRankingPts();
-		calculateRankingPts();
+		processFightScore();
 		//store everything including how many pts each user got from each fight 
 	}
-	public void calculateRankingPts()
+	public void processFightScore()
 	{
 		RankingPointsAlgorithm newFight = new RankingPointsAlgorithm();
-		System.out.println(winnerCurrentRankingPts);
-		System.out.println(loserCurrentRankingPts);
+		//System.out.println(winnerCurrentRankingPts);
+		//System.out.println(loserCurrentRankingPts);
 		newFight.setRankingPoints1(Integer.parseInt(winnerCurrentRankingPts));
 		newFight.setRankingPoints2(Integer.parseInt(loserCurrentRankingPts));
 
 		newFight.setScore1(Integer.parseInt(winnerPts));
 		newFight.setScore2(Integer.parseInt(loserPts));
 
-		calculateRankingPts();
+		newFight.calculateRankingPoint();
 
 		winnerExtraRankingPts = Integer.toString(newFight.getRankingPoints1());
 		loserExtraRankingPts = Integer.toString(newFight.getRankingPoints2());

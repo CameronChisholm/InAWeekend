@@ -31,6 +31,7 @@ public class Setup
 		if(fileExist == false)
 		{
 			ReadWriteToTxt.write(filename,"");
+			
 		}
 
 		filename = "fightData.txt";

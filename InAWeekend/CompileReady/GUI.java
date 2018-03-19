@@ -224,9 +224,6 @@ public class GUI extends JFrame implements ActionListener
 
 	public void startGUI()
 	{
-		setUpLoginTab();
-
-
 	/*
 		myTabs.addTab("Home Page",homePageTab);
 		myTabs.addTab("Managing Fights",fightsTab);
@@ -242,6 +239,7 @@ public class GUI extends JFrame implements ActionListener
 		this.add(myTabs);
 
 	*/
+		setUpLoginTab();
 		myTabs.addTab("Login",loginTab);
 		
 		this.setLayout(new GridLayout(1,1));
@@ -911,13 +909,14 @@ public class GUI extends JFrame implements ActionListener
 			 	is one of the fencers in the fight. If they are in the fight,
 			 	then only one other person will have to verify the fight.
 			*/
-			System.out.println(loggedInUser);
-			System.out.println(winnerName);
-			System.out.println(loserName);
-			boolean didCurrentUserFight = (loggedInUser.equals(winnerName))||(loggedInUser.equals(loserName));
-			if(didCurrentUserFight)
+			
+			if(loggedInUser.equals(winnerName))
 			{
-				verificationStatus = new String[] {"0",""};
+				verificationStatus = new String[] {"0",loserName};
+			}
+			else if(loggedInUser.equals(loserName))
+			{
+				verificationStatus = new String[] {"0",winnerName};
 			}
 
 
