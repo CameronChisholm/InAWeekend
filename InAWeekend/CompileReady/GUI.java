@@ -22,6 +22,8 @@ public class GUI extends JFrame implements ActionListener
 	private JPanel homePageTab = new JPanel(null);
 	private JPanel rankingTableTab = new JPanel(null);
 	private JPanel managingAccountsTab = new JPanel(null);
+	private JPanel targets_adminTab = new JPanel(null);
+	private JPanel targets_fencerTab = new JPanel(null);
 	
 	
 
@@ -32,6 +34,9 @@ public class GUI extends JFrame implements ActionListener
 	private DefaultTableModel userTableModel;
 	private JTable userTable;
 	private JScrollPane userTableScroll;
+	private JLabel lblManagingAccountsTitle = new JLabel();
+	private JButton btPermissions = new JButton();
+	private JButton btDeleteManagingAccounts = new JButton();
 
 	/* 
 	Below, GUI Components for the 'login'
@@ -128,7 +133,13 @@ public class GUI extends JFrame implements ActionListener
 	tab are declared.
 	*/
 	private JLabel lblPageTitle = new JLabel();
+	private JLabel lblPtsRequired = new JLabel();
+	private JLabel lblCurrentRank = new JLabel();
+	private JLabel lblLosses = new JLabel();
+	private JLabel lblWins = new JLabel();
+
 	private JButton btLogOff = new JButton();
+
 
 	/* 
 	Below, GUI Components for the 'ranking table'
@@ -140,30 +151,139 @@ public class GUI extends JFrame implements ActionListener
 
 	private JLabel lblRankingTableTabDescription;
 
-	public boolean setUpManagingAccounts(String username,
-										String rankingPts,
-										String noOfGames,
-										String permissions)
+	/* 
+	Below, GUI Components for the 'Target (Admin)'
+	tab are declared.
+	*/
+
+	private JLabel lblTargetTitle = new JLabel();
+	private JLabel lblSelectFencer = new JLabel();
+
+	private JButton btLoad = new JButton();
+	private JButton btViewTarget = new JButton();
+	private JButton btSubmitTarget = new JButton();
+
+
+
+	/* 
+	Below, GUI Components for the 'Target (Fencer)'
+	tab are declared.
+	*/
+
+	private JButton btViewTarget_User = new JButton();
+
+	private DefaultTableModel targetUser_TableModel;
+	private JTable targetUserTable;
+	private JScrollPane targetUserTableScroll;
+
+	public void setupTargetsFencer(String[][] tableContents)
 	{
-		String[] headings = {"Username","Ranking Points","No of Games","Permissions"};
+		String[] headings = {"Target Title","Set By"};
 
-		String[] tableContents = new String[4];
+		targetUser_TableModel = new DefaultTableModel(tableContents,headings);
 
-		tableContents[0] = username;
-		tableContents[1] = rankingPts;
-		tableContents[2] = noOfGames;
-		tableContents[3] = permissions;
+		targetUserTable = new JTable(targetUser_TableModel);
+		targetUserTable.setFont(new Font("Courier",Font.PLAIN,14));
+
+		targetUserTableScroll = new JScrollPane(targetUserTable);
+		targetUserTableScroll.setSize(700,300);
+		targetUserTableScroll.setLocation(10,100);
+
+		btViewTarget_User.setLocation(500,500);
+		btViewTarget_User.setSize(305,50);
+		btViewTarget_User.addActionListener(this);
+		btViewTarget_User.setFont(new Font("Courier",Font.PLAIN,25));
+		btViewTarget_User.setText("View");
+
+		targets_fencerTab.add(btViewTarget_User);
+		targets_fencerTab.add(targetUserTableScroll);
+	}
+
+
+
+	public void setupTargetsAdmin()
+	{
+		// Setup for title
+		lblTargetTitle.setLocation(10,10);
+		lblTargetTitle.setSize(600,50);
+		lblTargetTitle.setOpaque(true);
+		lblTargetTitle.setFont(new Font("Courier",Font.PLAIN,45));
+		lblTargetTitle.setText("Targets");
+
+		// Setup for the select fencer
+		lblSelectFencer.setLocation(10,100);
+		lblSelectFencer.setSize(600,50);
+		lblSelectFencer.setOpaque(true);
+		lblSelectFencer.setFont(new Font("Courier",Font.PLAIN,45));
+		lblSelectFencer.setText("Select Fencer");
+
+		// Setup for the load button
+		btLoad.setLocation(100,200);
+		btLoad.setSize(305,50);
+		btLoad.addActionListener(this);
+		btLoad.setFont(new Font("Courier",Font.PLAIN,25));
+		btLoad.setText("Load");
+
+		// Setup for the view button
+		btViewTarget.setLocation(10,500);
+		btViewTarget.setSize(305,50);
+		btViewTarget.addActionListener(this);
+		btViewTarget.setFont(new Font("Courier",Font.PLAIN,25));
+		btViewTarget.setText("View");
+
+		// Setup for the delete button
+		btSubmitTarget.setLocation(200,500);
+		btSubmitTarget.setSize(305,50);
+		btSubmitTarget.addActionListener(this);
+		btSubmitTarget.setFont(new Font("Courier",Font.PLAIN,25));
+		btSubmitTarget.setText("Delete");
+
+		targets_adminTab.add(btLoad);
+		targets_adminTab.add(btViewTarget);
+		targets_adminTab.add(btSubmitTarget);
+		targets_adminTab.add(lblSelectFencer);
+		targets_adminTab.add(lblTargetTitle);
+	}
+
+	public void setUpManagingAccounts(String[][] tableContents)
+	{
+		
+		String[] headings = {"Username","Ranking Points","No. of Games","Permissions"};
 
 		userTableModel = new DefaultTableModel(tableContents,headings);
 
-		userTable = new JTable(fightsTableModel);
+		userTable = new JTable(userTableModel);
+		userTable.setFont(new Font("Courier",Font.PLAIN,14));
 
 		userTableScroll = new JScrollPane(userTable);
-
-		fightsTableScroll.setSize(300,400);
-		fightsTableScroll.setLocation(400,50);
+		userTableScroll.setSize(700,300);
+		userTableScroll.setLocation(10,100);
 		
+		
+		// Setup for the title (Jlabel)
+		lblManagingAccountsTitle.setLocation(10,10);
+		lblManagingAccountsTitle.setSize(600,50);
+		lblManagingAccountsTitle.setOpaque(true);
+		lblManagingAccountsTitle.setFont(new Font("Courier",Font.PLAIN,45));
+		lblManagingAccountsTitle.setText("Managing Accounts");
+
+		// Setup for the buttons
+		btPermissions.setLocation(10,500);
+		btPermissions.setSize(305,50);
+		btPermissions.addActionListener(this);
+		btPermissions.setFont(new Font("Courier",Font.PLAIN,25));
+		btPermissions.setText("Change Permissions");
+
+		btDeleteManagingAccounts.setLocation(500,500);
+		btDeleteManagingAccounts.setSize(200,50);
+		btDeleteManagingAccounts.addActionListener(this);
+		btDeleteManagingAccounts.setFont(new Font("Courier",Font.PLAIN,25));
+		btDeleteManagingAccounts.setText("Delete");
+
 		managingAccountsTab.add(userTableScroll);
+		managingAccountsTab.add(lblManagingAccountsTitle);
+		managingAccountsTab.add(btDeleteManagingAccounts);
+		managingAccountsTab.add(btPermissions);
 		
 	}
 
@@ -389,20 +509,14 @@ public class GUI extends JFrame implements ActionListener
 		
 		System.out.println("Login Page has been setup.");
 	}
-/*
-	public void setupRankingTable()
+
+	public void setupRankingTable(String[][] tableOfContents)
 	{
-		//lblRankingTableTabDescription.setLocation(10,0);
-		//lblRankingTableTabDescription.setSize(300,50);
-		//lblRankingTableTabDescription.setOpaque(true);
-		//lblrankingTableTabDescription.setFont(new Font("Courier",Font.PLAIN,30));
-		//lblRankingTableTabDescription.setText("Ranking Table");	
+		String[] headings = {"Rank","Name of Fencer","No. of Fights","Ranking Points"};
 
-		String[] rankingTableHeadings = {"Rank","Name of Fencer","Ranking Points"};
+		//String[] rankingDataRecords = HomePage.getRankingData();
 
-		String[] rankingDataRecords = HomePage.getRankingData();
-
-		int amountOfRecords = rankingDataRecords.length;
+		/*int amountOfRecords = rankingDataRecords.length;
 
 		String[][] rankingTableData = new String[0][0];
 
@@ -419,37 +533,73 @@ public class GUI extends JFrame implements ActionListener
 				rankingTableData[i][3] = recordArr[3];
 			}
 		}
+		*/;
 
-
-		rankingTableModel = new DefaultTableModel(rankingTableData,rankingTableHeadings);
+		rankingTableModel = new DefaultTableModel(tableOfContents,headings);
 
 		rankingTable = new JTable(rankingTableModel);
+		rankingTable.setFont(new Font("Courier",Font.PLAIN,14));
 
 		rankingTableScroll = new JScrollPane(rankingTable);
-
 		rankingTableScroll.setSize(700,500);
 		rankingTableScroll.setLocation(10,10);	
 
-		//rankingTableTab.add(lblRankingTableTabDescription);
 		rankingTableTab.add(rankingTableScroll);
 	}
-*/
+
 	public void setupHomePage()
 	{
-		lblPageTitle.setLocation(10,0);
-		lblPageTitle.setSize(300,50);
-		lblPageTitle.setOpaque(true);
-		lblPageTitle.setFont(new Font("Courier",Font.PLAIN,30));
-		lblPageTitle.setText("Home Page");
+		ImageIcon icon = new ImageIcon("settingsIcon.png");
+		JButton btSettings = new JButton(icon);
 
-		btLogOff.setLocation(300,0);
+		btSettings.setLocation(375,500);
+		btSettings.setSize(200,50);
+		btSettings.addActionListener(this);
+
+		lblPageTitle.setLocation(10,0);
+		lblPageTitle.setSize(400,50);
+		lblPageTitle.setOpaque(true);
+		lblPageTitle.setFont(new Font("Courier",Font.PLAIN,35));
+		lblPageTitle.setText("You are logged on as <Username>");
+
+		lblCurrentRank.setLocation(10,100);
+		lblCurrentRank.setSize(400,50);
+		lblCurrentRank.setOpaque(true);
+		lblCurrentRank.setFont(new Font("Courier",Font.PLAIN,22));
+		lblCurrentRank.setText("Your Current Rank is: <Rank No.>");
+
+		lblPtsRequired.setLocation(10,200);
+		lblPtsRequired.setSize(400,50);
+		lblPtsRequired.setOpaque(true);
+		lblPtsRequired.setFont(new Font("Courier",Font.PLAIN,22));
+		lblPtsRequired.setText("Points Required for Rank <Rank No.-1>:<Points>");
+
+		lblWins.setLocation(10,300);
+		lblWins.setSize(400,50);
+		lblWins.setOpaque(true);
+		lblWins.setFont(new Font("Courier",Font.PLAIN,22));
+		lblWins.setText("Wins: <No. of Wins>");
+
+		lblLosses.setLocation(10,400);
+		lblLosses.setSize(400,50);
+		lblLosses.setOpaque(true);
+		lblLosses.setFont(new Font("Courier",Font.PLAIN,22));
+		lblLosses.setText("Losses: <No. of Losses>");
+
+		btLogOff.setLocation(450,500);
 		btLogOff.setSize(200,50);
 		btLogOff.addActionListener(this);
-		btLogOff.setFont(new Font("Courier",Font.PLAIN,30));
-		btLogOff.setText("Log off");
+		btLogOff.setFont(new Font("Courier",Font.PLAIN,35));
+		btLogOff.setText("Logout");
+
 
 		homePageTab.add(lblPageTitle);
 		homePageTab.add(btLogOff);
+		homePageTab.add(lblPtsRequired);
+		homePageTab.add(lblCurrentRank);
+		homePageTab.add(lblLosses);
+		homePageTab.add(lblWins);
+		homePageTab.add(btSettings);
 
 	}
 
@@ -718,13 +868,12 @@ public class GUI extends JFrame implements ActionListener
 
 	public void displaySystem(User user)
 	{
-		Fight user = new Fight();
+		Fight fight = new Fight();
 
-		userID = user.getUserID();
-		username = user.getUsername();
-		rankingPts = user.getUserRankingPts();
+		String[][] tableOfContents = fight.getTableContents();
+
 		permissions = user.getPermission();
-		amountOfFights = user.getAmountOfFights(userID);
+
 	
 		if(permissions.equals("Root"))
 		{
@@ -732,13 +881,15 @@ public class GUI extends JFrame implements ActionListener
 			
 			setUpFightsTab();
 			setupHomePage();
-			setUpManagingAccounts();
-			//setupRankingTable();
+			setUpManagingAccounts(tableOfContents);
+			setupRankingTable(new String[0][4]);
+			setupTargetsAdmin();
 			
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
-			//myTabs.addTab("Ranking Table",rankingTableTab);
+			myTabs.addTab("Ranking Table",rankingTableTab);
 			myTabs.addTab("Managing Accounts",managingAccountsTab);
+			myTabs.addTab("Managing Accounts",targets_adminTab);
 			
 
 			this.setLayout(new GridLayout(1,1));
@@ -771,9 +922,12 @@ public class GUI extends JFrame implements ActionListener
 			myTabs.remove(0);
 			setUpFightsTab();
 			setupHomePage();
+			setupTargetsFencer(new String[0][4]);
 			//setupRankingTable();
+
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
+			myTabs.addTab("Targets",targets_fencerTab);
 			//myTabs.addTab("Ranking Table",rankingTableTab);
 			
 
@@ -832,6 +986,7 @@ public class GUI extends JFrame implements ActionListener
 				user.setUsername(username);
 				user.findID();
 				user.findRankingPts();
+				user.findPermissions();
 
 				displaySystem(user);
 				setUpPopUpBox("Login Successful");

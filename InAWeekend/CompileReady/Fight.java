@@ -17,9 +17,64 @@ public class Fight
 	private String[] verificationStatus;
 	
 	/*
-		Everything to do with processing
-		a fight.
+		Everything to do with populating 
+		the permissions table.
 	*/
+	public String[][] getTableContents()
+	{
+		int amountOfFights;
+
+		String[][] tableOfContents;
+
+		String fileContent_User;
+		String fileContent_Fights;
+
+		String[] userContentArr;
+		String[] userRecordArr;
+
+		String[] fightContentArr;
+		String[] fightRecordArr;
+
+		UserList user = new UserList();
+		fileContent_User = user.getUserRecords();
+
+		FightList fight = new FightList();
+		fileContent_Fights = fight.getFightRecords();
+
+		System.out.println(fileContent_User);
+		System.out.println(fileContent_Fights);
+
+		userContentArr = fileContent_User.split("-1");
+		fightContentArr = fileContent_Fights.split("-1");
+
+		tableOfContents = new String[userContentArr.length][4];
+
+		for(int i=0;i<userContentArr.length;i++)
+		{
+			amountOfFights = 0;
+
+			userRecordArr = userContentArr[i].split(",");
+
+			tableOfContents[i][0] = userRecordArr[0];
+			tableOfContents[i][1] = userRecordArr[2];
+			tableOfContents[i][3] = userRecordArr[4];
+
+			for(int j=0;j<fightContentArr.length;j++)
+			{
+				fightRecordArr = fightContentArr[j].split(",");
+
+				if(userRecordArr[0].equals(fightRecordArr[2])||userRecordArr[0].equals(fightRecordArr[3]))
+				{
+					amountOfFights++;
+				}
+			}
+
+			tableOfContents[i][2] = Integer.toString(amountOfFights);
+		}
+
+		return tableOfContents;
+	}
+	/*
 	public String getAmountOfFights(String userID)
 	{
 		String fileContent;
@@ -44,8 +99,8 @@ public class Fight
 
 		return Integer.toString(amountOfFights);
 
-
 	}
+	*/
 
 	/*
 		Everything to do with processing
