@@ -111,16 +111,20 @@ public class UserList
 	*/
 	public void saveNewUserDetails(User newUser)
 	{
-		String username,hashedPassword,userRankingPts,userID,userRecord;
+		String username,hashedPassword,userRankingPts,userID,userRecord,permission;
 
 		username = newUser.getUsername();
 		hashedPassword = newUser.getHashedPassword();
 		userRankingPts = Integer.toString(newUser.getUserRankingPts());
 		userID = Integer.toString(newUser.getUserID());	
+		permission = newUser.getPermission();
+
+
 		userRecord = username+","+
 					hashedPassword+","+
 					userRankingPts+","+
-					userID+","+"-1";
+					userID+","+
+					permission+"-1";
 		ReadWriteToTxt.write(filename,userRecord);
 	}
 }

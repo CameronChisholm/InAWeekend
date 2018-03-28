@@ -12,6 +12,7 @@ public class User
 	// Attributes specific to new users.
 	String hashedPassword;
 	String password;
+	String permission;
 	
 	
 	public User(){}
@@ -31,6 +32,16 @@ public class User
 	public String getUsername()
 	{
 		return username;
+	}
+
+	public String getPermission()
+	{
+		return permission;
+	}
+
+	public void setPermission(String tempPermission)
+	{
+		permission = tempPermission;
 	}
 
 	public int getUserRankingPts()
@@ -82,10 +93,12 @@ public class User
 		if(existingRecords)
 		{
 			userID = highestID();
+			permission = "New User";
 		}
 		else
 		{
 			userID = 1;
+			permission = "Root";
 		}
 	}
 	
@@ -152,6 +165,23 @@ public class User
 		if(doesUserExist)
 		{
 			userRankingPts = Integer.parseInt(user.searchAndReturnData(userIDStr,3,2));
+		}
+		else
+		{
+			System.out.println("Error, User: "+username+" .");
+			System.out.println("Does not exist.");
+		}
+	}
+
+	public void findPermissions()
+	{
+		UserList user = new UserList();
+		String userIDStr = Integer.toString(userID);
+
+		boolean doesUserExist = user.search(userIDStr,3);
+		if(doesUserExist)
+		{
+			permission = user.searchAndReturnData(userIDStr,3,4);
 		}
 		else
 		{

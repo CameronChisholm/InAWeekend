@@ -21,7 +21,18 @@ public class GUI extends JFrame implements ActionListener
 	private JPanel fightsTab = new JPanel(null);
 	private JPanel homePageTab = new JPanel(null);
 	private JPanel rankingTableTab = new JPanel(null);
+	private JPanel managingAccountsTab = new JPanel(null);
 	
+	
+
+	/* 
+	Below, GUI Components for the 'managing accounts'
+	tab are declared.
+	*/
+	private DefaultTableModel userTableModel;
+	private JTable userTable;
+	private JScrollPane userTableScroll;
+
 	/* 
 	Below, GUI Components for the 'login'
 	tab are declared.
@@ -129,7 +140,32 @@ public class GUI extends JFrame implements ActionListener
 
 	private JLabel lblRankingTableTabDescription;
 
+	public boolean setUpManagingAccounts(String username,
+										String rankingPts,
+										String noOfGames,
+										String permissions)
+	{
+		String[] headings = {"Username","Ranking Points","No of Games","Permissions"};
 
+		String[] tableContents = new String[4];
+
+		tableContents[0] = username;
+		tableContents[1] = rankingPts;
+		tableContents[2] = noOfGames;
+		tableContents[3] = permissions;
+
+		userTableModel = new DefaultTableModel(tableContents,headings);
+
+		userTable = new JTable(fightsTableModel);
+
+		userTableScroll = new JScrollPane(userTable);
+
+		fightsTableScroll.setSize(300,400);
+		fightsTableScroll.setLocation(400,50);
+		
+		managingAccountsTab.add(userTableScroll);
+		
+	}
 
 	public boolean setUpEditPopUp(String[] tempRecordUserClickedOn)
 	{
@@ -680,9 +716,15 @@ public class GUI extends JFrame implements ActionListener
 		pfReEnterPasswd.setText("");	
 	}
 
-	public void displaySystem(String tempPermission)
+	public void displaySystem(User user)
 	{
-		permissions = tempPermission;
+		Fight user = new Fight();
+
+		userID = user.getUserID();
+		username = user.getUsername();
+		rankingPts = user.getUserRankingPts();
+		permissions = user.getPermission();
+		amountOfFights = user.getAmountOfFights(userID);
 	
 		if(permissions.equals("Root"))
 		{
@@ -690,11 +732,13 @@ public class GUI extends JFrame implements ActionListener
 			
 			setUpFightsTab();
 			setupHomePage();
+			setUpManagingAccounts();
 			//setupRankingTable();
 			
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
 			//myTabs.addTab("Ranking Table",rankingTableTab);
+			myTabs.addTab("Managing Accounts",managingAccountsTab);
 			
 
 			this.setLayout(new GridLayout(1,1));
@@ -789,7 +833,7 @@ public class GUI extends JFrame implements ActionListener
 				user.findID();
 				user.findRankingPts();
 
-				displaySystem("Fencer");
+				displaySystem(user);
 				setUpPopUpBox("Login Successful");
 				
 

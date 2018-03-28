@@ -16,6 +16,36 @@ public class Fight
 	private int fightID;
 	private String[] verificationStatus;
 	
+	/*
+		Everything to do with processing
+		a fight.
+	*/
+	public String getAmountOfFights(String userID)
+	{
+		String fileContent;
+		String[] fightContentArr;
+		String[] fightRecordArr;
+		int amountOfFights = 0;
+
+		FightList user = new FightList();
+		fileContent = user.getFightRecords();
+
+		fightContentArr = fileContent.split("-1");
+
+		for(int i=0;i<fightContentArr.length;i++)
+		{
+			fightRecordArr = fightContentArr[i].split(",");
+
+			if(userID.equals(fightRecordArr[2]))
+			{
+				amountOfFights++;
+			}
+		}
+
+		return Integer.toString(amountOfFights);
+
+
+	}
 
 	/*
 		Everything to do with processing
