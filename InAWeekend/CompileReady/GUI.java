@@ -24,6 +24,7 @@ public class GUI extends JFrame implements ActionListener
 	private JPanel managingAccountsTab = new JPanel(null);
 	private JPanel targets_adminTab = new JPanel(null);
 	private JPanel targets_fencerTab = new JPanel(null);
+	private JPanel competition_adminTab = new JPanel(null);
 	
 	
 
@@ -49,8 +50,11 @@ public class GUI extends JFrame implements ActionListener
 	private JLabel lblPasswd = new JLabel();
 	private JLabel lblWelcomeMessage = new JLabel();
 	private JLabel lblOr = new JLabel();
+	private JLabel lblvalidationRules = new JLabel();
 	private JButton btCreateAnAccount = new JButton();
 	private JPanel createAnAccountTab = new JPanel(null);
+
+	
 	
 	
 	/* 
@@ -159,10 +163,19 @@ public class GUI extends JFrame implements ActionListener
 	private JLabel lblTargetTitle = new JLabel();
 	private JLabel lblSelectFencer = new JLabel();
 
+	private JTextField tfTargetTitle = new JTextField();
+	private JTextField tfTarget = new JTextField();
+
 	private JButton btLoad = new JButton();
 	private JButton btViewTarget = new JButton();
+	private JButton btDeleteTarget = new JButton();
 	private JButton btSubmitTarget = new JButton();
 
+	private JComboBox cbSelectFencerTargets;
+
+	private DefaultTableModel targetsTableModel;
+	private JTable targetsTable;
+	private JScrollPane targetsTableScroll;
 
 
 	/* 
@@ -175,6 +188,98 @@ public class GUI extends JFrame implements ActionListener
 	private DefaultTableModel targetUser_TableModel;
 	private JTable targetUserTable;
 	private JScrollPane targetUserTableScroll;
+
+	/* 
+	Below, GUI Components for the 'Competition (Admin)'
+	tab are declared.
+	*/
+
+	private JLabel lblCompetitionTitle_Admin = new JLabel();
+	private JLabel lblCompetitionSelectFencer = new JLabel();
+	private JLabel lblCompetitionSelectedFencer = new JLabel();
+
+	private JButton btAddSelectedFencer = new JButton();
+	private JButton btRemoveSelectedFencer = new JButton();
+	private JButton btSubmitCompetition = new JButton();
+
+	private JComboBox cbSelectFencer;
+
+	private DefaultTableModel competitionAdmin_TableModel;
+	private JTable competitionAdminTable;
+	private JScrollPane competitionAdminTableScroll;
+
+
+
+	public void setupCompetitionAdmin(String[][] tableContents)
+	{
+		// Setup for Competition Title (Admin Tab)
+		lblCompetitionTitle_Admin.setLocation(10,10);
+		lblCompetitionTitle_Admin.setSize(300,50);
+		lblCompetitionTitle_Admin.setOpaque(true);
+		lblCompetitionTitle_Admin.setFont(new Font("Courier",Font.PLAIN,35));
+		lblCompetitionTitle_Admin.setText("Competition");
+
+		// Setup for sub-title 'Select Fencer' (Admin Tab)
+		lblCompetitionSelectFencer.setLocation(10,100);
+		lblCompetitionSelectFencer.setSize(300,50);
+		lblCompetitionSelectFencer.setOpaque(true);
+		lblCompetitionSelectFencer.setFont(new Font("Courier",Font.PLAIN,35));
+		lblCompetitionSelectFencer.setText("Select Fencer");
+
+		// Setup for sub-title 'Selected Fencer' (Admin Tab)
+		lblCompetitionSelectedFencer.setLocation(400,100);
+		lblCompetitionSelectedFencer.setSize(350,50);
+		lblCompetitionSelectedFencer.setOpaque(true);
+		lblCompetitionSelectedFencer.setFont(new Font("Courier",Font.PLAIN,35));
+		lblCompetitionSelectedFencer.setText("Selected Fencers");
+
+		// Setup for add fencer button
+		btAddSelectedFencer.setLocation(100,200);
+		btAddSelectedFencer.setSize(100,50);
+		btAddSelectedFencer.addActionListener(this);
+		btAddSelectedFencer.setFont(new Font("Courier",Font.PLAIN,25));
+		btAddSelectedFencer.setText("Add");
+
+		// Setup for remove fencer button
+		btRemoveSelectedFencer.setLocation(100,300);
+		btRemoveSelectedFencer.setSize(150,50);
+		btRemoveSelectedFencer.addActionListener(this);
+		btRemoveSelectedFencer.setFont(new Font("Courier",Font.PLAIN,25));
+		btRemoveSelectedFencer.setText("Remove");
+
+		// Setup for submit competition configuration
+		btSubmitCompetition.setLocation(500,500);
+		btSubmitCompetition.setSize(200,50);
+		btSubmitCompetition.addActionListener(this);
+		btSubmitCompetition.setFont(new Font("Courier",Font.PLAIN,35));
+		btSubmitCompetition.setText("Submit");
+
+		// Setup for the select fencer combo box
+		cbSelectFencer = new JComboBox(new String[] {"-"});
+		cbSelectFencer.setBounds(10,200,100,25);
+
+		// Setup for the table for selected fencers.
+		String[] headings = {"Selected Fencers"};
+
+		competitionAdmin_TableModel = new DefaultTableModel(tableContents,headings);
+
+		competitionAdminTable = new JTable(competitionAdmin_TableModel);
+		competitionAdminTable.setFont(new Font("Courier",Font.PLAIN,30));
+
+		competitionAdminTableScroll = new JScrollPane(competitionAdminTable);
+		competitionAdminTableScroll.setSize(300,350);
+		competitionAdminTableScroll.setLocation(400,150);
+
+		competition_adminTab.add(competitionAdminTableScroll);
+		competition_adminTab.add(cbSelectFencer);
+		competition_adminTab.add(btSubmitCompetition);
+		competition_adminTab.add(btAddSelectedFencer);
+		competition_adminTab.add(btRemoveSelectedFencer);
+		competition_adminTab.add(lblCompetitionSelectedFencer);
+		competition_adminTab.add(lblCompetitionSelectFencer);
+		competition_adminTab.add(lblCompetitionTitle_Admin);
+
+	}
 
 	public void setupTargetsFencer(String[][] tableContents)
 	{
@@ -201,48 +306,89 @@ public class GUI extends JFrame implements ActionListener
 
 
 
-	public void setupTargetsAdmin()
+	public void setupTargetsAdmin(String[][] tableContents)
 	{
 		// Setup for title
 		lblTargetTitle.setLocation(10,10);
-		lblTargetTitle.setSize(600,50);
+		lblTargetTitle.setSize(375,50);
 		lblTargetTitle.setOpaque(true);
 		lblTargetTitle.setFont(new Font("Courier",Font.PLAIN,45));
 		lblTargetTitle.setText("Targets");
 
 		// Setup for the select fencer
-		lblSelectFencer.setLocation(10,100);
-		lblSelectFencer.setSize(600,50);
+		lblSelectFencer.setLocation(10,90);
+		lblSelectFencer.setSize(350,50);
 		lblSelectFencer.setOpaque(true);
-		lblSelectFencer.setFont(new Font("Courier",Font.PLAIN,45));
+		lblSelectFencer.setFont(new Font("Courier",Font.PLAIN,35));
 		lblSelectFencer.setText("Select Fencer");
 
+		// Setup for the target (text field)
+
+		tfTarget.setFont(new Font("Courier",Font.PLAIN,35));
+		tfTarget.setText("Target Content");
+		tfTarget.setBounds(400,150,375,375);
+
+		// Setup for the target title (text field)
+
+		tfTargetTitle.setFont(new Font("Courier",Font.PLAIN,35));
+		tfTargetTitle.setText("Target Title");
+		tfTargetTitle.setBounds(400,50,375,50);
+
 		// Setup for the load button
-		btLoad.setLocation(100,200);
-		btLoad.setSize(305,50);
+		btLoad.setLocation(200,150);
+		btLoad.setSize(150,50);
 		btLoad.addActionListener(this);
 		btLoad.setFont(new Font("Courier",Font.PLAIN,25));
 		btLoad.setText("Load");
 
 		// Setup for the view button
-		btViewTarget.setLocation(10,500);
-		btViewTarget.setSize(305,50);
+		btViewTarget.setLocation(10,550);
+		btViewTarget.setSize(150,50);
 		btViewTarget.addActionListener(this);
 		btViewTarget.setFont(new Font("Courier",Font.PLAIN,25));
 		btViewTarget.setText("View");
 
 		// Setup for the delete button
-		btSubmitTarget.setLocation(200,500);
-		btSubmitTarget.setSize(305,50);
+		btDeleteTarget.setLocation(200,550);
+		btDeleteTarget.setSize(150,50);
+		btDeleteTarget.addActionListener(this);
+		btDeleteTarget.setFont(new Font("Courier",Font.PLAIN,25));
+		btDeleteTarget.setText("Delete");
+
+		// Setup for the submit button
+		btSubmitTarget.setLocation(600,550);
+		btSubmitTarget.setSize(150,50);
 		btSubmitTarget.addActionListener(this);
 		btSubmitTarget.setFont(new Font("Courier",Font.PLAIN,25));
-		btSubmitTarget.setText("Delete");
+		btSubmitTarget.setText("Submit");
+
+		String[] headings = {"Target Title","Set By"};
+
+		targetsTableModel = new DefaultTableModel(tableContents,headings);
+
+		targetsTable = new JTable(targetsTableModel);
+		targetsTable.setFont(new Font("Courier",Font.PLAIN,14));
+
+		targetsTableScroll = new JScrollPane(targetsTable);
+		targetsTableScroll.setSize(350,300);
+		targetsTableScroll.setLocation(10,225);
+
+		cbSelectFencerTargets = new JComboBox(new String[] {"-"});
+		cbSelectFencerTargets.setBounds(10,175,100,25);
 
 		targets_adminTab.add(btLoad);
 		targets_adminTab.add(btViewTarget);
 		targets_adminTab.add(btSubmitTarget);
 		targets_adminTab.add(lblSelectFencer);
 		targets_adminTab.add(lblTargetTitle);
+		targets_adminTab.add(tfTargetTitle);
+		targets_adminTab.add(targetsTableScroll);
+		targets_adminTab.add(cbSelectFencerTargets);
+		targets_adminTab.add(tfTarget);
+		targets_adminTab.add(btDeleteTarget);
+
+
+
 	}
 
 	public void setUpManagingAccounts(String[][] tableContents)
@@ -408,6 +554,8 @@ public class GUI extends JFrame implements ActionListener
 
 	public void setUpCreateAnAccountTab()
 	{
+
+		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
 		lblEnterUsr.setLocation(75,100);
 		lblEnterUsr.setSize(100,50);
 		lblEnterUsr.setOpaque(true);
@@ -416,12 +564,20 @@ public class GUI extends JFrame implements ActionListener
 		lblEnterPasswd.setLocation(75,200);
 		lblEnterPasswd.setSize(100,50);
 		lblEnterPasswd.setOpaque(true);
+		lblEnterPasswd.setFont(new Font("Courier",Font.PLAIN,20));
 		lblEnterPasswd.setText("Enter Password:");
 		
 		lblReEnterPasswd.setLocation(75,300);
 		lblReEnterPasswd.setSize(125,50);
 		lblReEnterPasswd.setOpaque(true);
+		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
 		lblReEnterPasswd.setText("Re-enter Password:");
+
+		lblvalidationRules.setLocation(550,10);
+		lblvalidationRules.setSize(400,200);
+		lblvalidationRules.setOpaque(true);
+		lblvalidationRules.setFont(new Font("Courier",Font.PLAIN,20));
+		lblvalidationRules.setText("<html><span>- Username must have a length greater than 2 but less than 21.<br>- Username must contain not symbols.<br>- Passwords must be greater than 9 characters<br>- Password must contain atleast one special character, number and letter.</span></html>");
 		
 		pfEnterPasswd.addActionListener(this);
 		pfEnterPasswd.setLocation(200,200);
@@ -438,11 +594,13 @@ public class GUI extends JFrame implements ActionListener
 		btSubmitUserDetails.setLocation(200,400);
 		btSubmitUserDetails.setSize(200,50);
 		btSubmitUserDetails.addActionListener(this);
+		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
 		btSubmitUserDetails.setText("Submit");
 		
 		btBack.setLocation(10,400);
 		btBack.setSize(200,50);
 		btBack.addActionListener(this);
+		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
 		btBack.setText("Back");
 		
 		createAnAccountTab.add(btBack);
@@ -453,6 +611,7 @@ public class GUI extends JFrame implements ActionListener
 		createAnAccountTab.add(lblEnterPasswd);
 		createAnAccountTab.add(lblReEnterPasswd);
 		createAnAccountTab.add(btSubmitUserDetails);
+		createAnAccountTab.add(lblvalidationRules);
 		
 	}
 
@@ -792,6 +951,16 @@ public class GUI extends JFrame implements ActionListener
 	public boolean validateUserDetails(String tempUsername,String tempPassword)
 	{
 		boolean validationSuccessful = false;
+		String specialChars = "/*!@#$%^&*()\"{}_[]|\\?/<>,.''";
+		String numbers = "0123456789";
+		String alphabet = "abcdefghijklmnopqrstuvwxyx";
+
+		int amountOfSpecialChars = 0;
+		int amountOfNumbers = 0;
+		int amountOfLetters = 0;
+
+		boolean contentsCheck;
+
 		// Presence Check
 		// 'presenceCheck' will turn true if the test succeeds
 		boolean presenceCheck = (!tempUsername.equals(""))
@@ -819,11 +988,32 @@ public class GUI extends JFrame implements ActionListener
 		*/
 		//boolean usernameContentsCheck = (tempUsername.contains("[a-zA-Z]+"))
 										
+		for(int i=0;i<tempPassword.length();i++)
+		{
+			if(specialChars.contains(tempPassword.substring(i,1)))
+			{
+				amountOfSpecialChars++;
+			}
+			else if(numbers.contains(tempPassword.substring(i,1)))
+			{
+				amountOfNumbers++;
+			}
+			else if(alphabet.contains(tempPassword.substring(i,1)))
+			{
+				amountOfLetters++;
+			}
+		}
+
+		contentsCheck = (amountOfLetters>1)&&(amountOfNumbers>1)&&(amountOfSpecialChars>1);
+
+
 		validationSuccessful = presenceCheck
 								&&
 								usernameLengthCheck
 								&&
-								passwordLengthCheck;
+								passwordLengthCheck
+								&&
+								contentsCheck;
 
 		return validationSuccessful;
 
@@ -883,13 +1073,15 @@ public class GUI extends JFrame implements ActionListener
 			setupHomePage();
 			setUpManagingAccounts(tableOfContents);
 			setupRankingTable(new String[0][4]);
-			setupTargetsAdmin();
+			setupTargetsAdmin(new String[0][2]);
+			setupCompetitionAdmin(new String[0][0]);
 			
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
 			myTabs.addTab("Ranking Table",rankingTableTab);
 			myTabs.addTab("Managing Accounts",managingAccountsTab);
-			myTabs.addTab("Managing Accounts",targets_adminTab);
+			myTabs.addTab("Targets",targets_adminTab);
+			myTabs.addTab("Competitions",competition_adminTab);
 			
 
 			this.setLayout(new GridLayout(1,1));
@@ -904,12 +1096,15 @@ public class GUI extends JFrame implements ActionListener
 
 			setUpFightsTab();
 			setupHomePage();
-			//setupRankingTable();
+			setupRankingTable(new String[0][4]);
+			setupTargetsAdmin(new String[0][2]);
+			setupCompetitionAdmin(new String[0][0]);
 
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
-			//myTabs.addTab("Ranking Table",rankingTableTab);
-			
+			myTabs.addTab("Ranking Table",rankingTableTab);
+			myTabs.addTab("Targets",targets_adminTab);
+			myTabs.addTab("Competitions",competition_adminTab);
 
 			this.setLayout(new GridLayout(1,1));
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -920,16 +1115,16 @@ public class GUI extends JFrame implements ActionListener
 		else if(permissions.equals("Fencer"))
 		{
 			myTabs.remove(0);
+
 			setUpFightsTab();
 			setupHomePage();
 			setupTargetsFencer(new String[0][4]);
-			//setupRankingTable();
+			setupRankingTable(new String[0][4]);
 
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Managing Fights",fightsTab);
+			myTabs.addTab("Ranking Table",rankingTableTab);
 			myTabs.addTab("Targets",targets_fencerTab);
-			//myTabs.addTab("Ranking Table",rankingTableTab);
-			
 
 			this.setLayout(new GridLayout(1,1));
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -940,13 +1135,11 @@ public class GUI extends JFrame implements ActionListener
 		else
 		{
 			myTabs.remove(0);
-			setUpFightsTab();
 			setupHomePage();
-			//setupRankingTable();
+			setupRankingTable(new String[0][4]);
+
 			myTabs.addTab("Home Page",homePageTab);
-			myTabs.addTab("Managing Fights",fightsTab);
-			//myTabs.addTab("Ranking Table",rankingTableTab);
-			
+			myTabs.addTab("Ranking Table",rankingTableTab);
 
 			this.setLayout(new GridLayout(1,1));
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1008,7 +1201,7 @@ public class GUI extends JFrame implements ActionListener
 		{
 			myTabs.remove(0);		
 			setUpCreateAnAccountTab();
-			this.setSize(500,600);
+			this.setSize(500,900);
 			myTabs.addTab("Create an Account",createAnAccountTab);
 
 		}
@@ -1029,8 +1222,10 @@ public class GUI extends JFrame implements ActionListener
 
 			// Performs validation on the new data
 			validationCheck = validateUserDetails(username,password);
+
 			// Checks that the passwords match, so wrong password is not saved
 			passwordsMatch = doPasswordsMatch(password,reEnteredPassword);
+
 			// Unique Username Check
 			uniqueUsername = !(savingNewUser.search(username,0));
 			
@@ -1093,6 +1288,50 @@ public class GUI extends JFrame implements ActionListener
 		}
 
 */
+		else if(e.getSource()==btPermissions)
+		{
+			String filename = "userDetails.txt";
+			UserList user = new UserList();
+			String fileContent;
+			String[] userRecords;
+			String[] userFields;
+			String toWrite;
+
+			String field;
+			String[] recordClickedOn = new String[4];
+			for(int i=0;i<4;i++)
+			{
+				field = userTable.getValueAt(userTable.getSelectedRow(), i).toString();
+				recordClickedOn[i] = field;
+				System.out.println(field);
+			}
+
+			fileContent = user.getUserRecords();
+			userRecords = fileContent.split("-1");
+
+			for(int j=0;j<userRecords.length;j++)
+			{
+				userFields = userRecords[j].split(",");
+				
+				if(recordClickedOn[0].equals(userFields[0]))
+				{
+					userFields[4] = recordClickedOn[3];
+				}
+
+				userRecords[j] = userFields[0]+","+
+									userFields[1]+","+
+									userFields[2]+","+
+									userFields[3]+","+
+									userFields[4];
+
+				ReadWriteToTxt.overwrite(filename,userRecords);
+			}
+
+
+
+		}
+
+
 		else if(e.getSource()==btSubmit)
 		{
 			/*
