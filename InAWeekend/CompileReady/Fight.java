@@ -16,6 +16,41 @@ public class Fight
 	private int fightID;
 	private String[] verificationStatus;
 	
+	public String[][] getUnverifiedFights (String username)
+	{
+		String fileContent_Fights;
+		String[] fightContentArr;
+		String[] fightRecordArr;
+
+		String[][] unverifiedFights;
+
+		FightList fight = new FightList();
+
+		fileContent_Fights = fight.getFightRecords();
+
+		fightContentArr = fileContent_Fights.split("-1");
+
+		unverifiedFights = new String[fightContentArr.length][8];
+
+		for(int i=0;i<fightContentArr.length;i++)
+		{
+			fightRecordArr = fightContentArr[i].split(",");
+			if(fileContent_Fights.equals(""))
+			{
+				unverifiedFights = new String[0][0];
+			}
+			
+			else if(fightRecordArr[6].contains(username))
+			{
+				unverifiedFights[i] = fightRecordArr;
+			}
+			
+		}
+
+		return unverifiedFights;
+	}
+
+
 	/*
 		Everything to do with populating 
 		the permissions table.
@@ -63,7 +98,11 @@ public class Fight
 			{
 				fightRecordArr = fightContentArr[j].split(",");
 
-				if(userRecordArr[0].equals(fightRecordArr[2])||userRecordArr[0].equals(fightRecordArr[3]))
+				if(fileContent_Fights.equals(""))
+				{
+					amountOfFights = 0;
+				}
+				else if(userRecordArr[0].equals(fightRecordArr[2])||userRecordArr[0].equals(fightRecordArr[3]))
 				{
 					amountOfFights++;
 				}
@@ -74,7 +113,59 @@ public class Fight
 
 		return tableOfContents;
 	}
-	/*
+
+	public String[][] getFightTableContent()
+	{
+		String[][] tableOfContents;
+
+		String fileContent_User;
+		String fileContent_Fights;
+		String winnerID_;
+		String loserID_;
+		String winnerName_;
+		String loserName_;
+
+		String[] userContentArr;
+		String[] userRecordArr;
+
+		String[] fightContentArr;
+		String[] fightRecordArr;
+
+		UserList user = new UserList();
+
+		FightList fight = new FightList();
+		fileContent_Fights = fight.getFightRecords();
+
+
+		fightContentArr = fileContent_Fights.split("-1");
+
+		tableOfContents = new String[fightContentArr.length][5];
+
+		for(int i=0;i<fightContentArr.length;i++)
+		{
+			fightRecordArr = fightContentArr[i].split(",");
+			if(fileContent_Fights.equals("")){}
+			else if(fightRecordArr[6].equals("0-0"))
+			{
+				winnerID_ = fightRecordArr[2];
+				loserID_ = fightRecordArr[3];
+
+				winnerName_ = user.searchAndReturnData(winnerID_,3,0);
+				loserName_ = user.searchAndReturnData(loserID_,3,0);
+
+				tableOfContents[i][0] = winnerName_;
+				tableOfContents[i][1] = fightRecordArr[4];
+				tableOfContents[i][2] = loserName_;
+				tableOfContents[i][3] = fightRecordArr[5];
+				tableOfContents[i][4] = fightRecordArr[7];
+			}
+			
+		}
+
+		return tableOfContents;
+	}
+	
+
 	public String getAmountOfFights(String userID)
 	{
 		String fileContent;
@@ -100,7 +191,7 @@ public class Fight
 		return Integer.toString(amountOfFights);
 
 	}
-	*/
+	
 
 	/*
 		Everything to do with processing
@@ -155,10 +246,11 @@ public class Fight
 		int tempFightID;
 		int highest = 0;
 		String[] RecordArr;
+
 		for(int i=0;i<fightDataArr.length;i++)
 		{
 			RecordArr = fightDataArr[i].split(",");
-			tempFightID = Integer.parseInt(RecordArr[3]);
+			tempFightID = Integer.parseInt(RecordArr[7]);
 
 			if(tempFightID>highest)
 			{

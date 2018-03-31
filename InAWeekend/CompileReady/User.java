@@ -191,4 +191,61 @@ public class User
 	}
 
 
+	public String[][] sortRankingPoints()
+	{
+		// quick sort
+		UserList user = new UserList();
+		String[][] userPts = user.getAllFencerPoints();
+		int lowIndex = 0;
+		int highIndex = userPts.length-1;
+		userPts = quickSort(userPts,lowIndex,highIndex);
+
+		for(int i=0;i<highIndex+1;i++)
+		{
+			System.out.println(userPts[i][1]);
+		}
+		
+		return userPts;
+	}
+
+	public String[][] quickSort(String[][] rankingPoints,int lowIndex,int highIndex)
+	{
+		if(lowIndex<highIndex)
+		{
+			int partitioningIndex = partitioningIndex(rankingPoints,lowIndex,highIndex);
+
+			quickSort(rankingPoints,lowIndex, partitioningIndex-1);
+			quickSort(rankingPoints,partitioningIndex+1,highIndex);
+		}
+		return rankingPoints;
+	}
+
+	public int partitioningIndex(String[][] rankingPts,int lowIndex, int highIndex)
+	{
+		int pivot = Integer.parseInt(rankingPts[highIndex][1]);
+		String[] tempValue;
+
+		int i = (lowIndex-1);
+
+		for(int j=lowIndex; j<=highIndex-1; j++)
+		{
+			if(Integer.parseInt(rankingPts[j][1])<=pivot)
+			{
+				i++;
+				tempValue = rankingPts[i];
+				rankingPts[i] = rankingPts[j];
+				rankingPts[j] = tempValue;
+			}
+		}
+
+		tempValue = rankingPts[i+1];
+		rankingPts[i+1] = rankingPts[highIndex];
+		rankingPts[highIndex] = tempValue;
+
+		return (i+1);
+	}
+
+
+
+
 }

@@ -42,6 +42,15 @@ public class Setup
 		{
 			ReadWriteToTxt.write(filename,"");
 		}
+
+		filename = "targetDetails.txt";
+
+		fileExist = ReadWriteToTxt.checkFile(filename);
+
+		if(fileExist == false)
+		{
+			ReadWriteToTxt.write(filename,"");
+		}
 	}
 /*
 	public static boolean checkUserDetails(String tempUsername,String tempPassword)

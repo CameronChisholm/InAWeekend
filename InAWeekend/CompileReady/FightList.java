@@ -5,11 +5,36 @@ public class FightList
 	/*
 		This methods gets all fight data.
 	*/
+	public void deleteFight(String fightID)
+	{
+		String fileContent_Fights = getFightRecords();
+
+		String[] fightContentArr;
+		String[] newFightContentArr;
+		String[] fightRecordArr;
+		fightContentArr = fileContent_Fights.split("-1");
+		newFightContentArr = new String[fightContentArr.length-1];
+
+		for(int i=0;i<fightContentArr.length;i++)
+		{
+			fightRecordArr = fightContentArr[i].split(",");
+
+			if(!fightRecordArr[7].equals(fightID))
+			{
+				newFightContentArr[i] = fightContentArr[i];
+			}
+		}
+
+		ReadWriteToTxt.overwrite(filename,newFightContentArr);
+	}
+
 	public String getFightRecords()
 	{	
 		String fightData = ReadWriteToTxt.read(filename);	
 		return fightData;
 	}	
+
+
 	
 	/*
 		Checks for if there are any previous records.

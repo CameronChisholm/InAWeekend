@@ -24,6 +24,24 @@ public class UserList
 		return allFencerNames;
 	}
 
+	public String[][] getAllFencerPoints()
+	{
+		String userRecords = getUserRecords();
+		String[] userRecordsArr = userRecords.split("-1");
+
+		String[][] allFencerRankingPts = new String[userRecordsArr.length][2];
+
+		for(int i=0;i<userRecordsArr.length;i++)
+		{
+			String[] fencerRecord = userRecordsArr[i].split(",");
+			allFencerRankingPts[i][0] = fencerRecord[0];
+			allFencerRankingPts[i][1] = fencerRecord[2];
+
+		}
+
+		return allFencerRankingPts;
+	}
+
 	/*
 		Searches for the user records
 	*/

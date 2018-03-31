@@ -25,9 +25,9 @@ public class GUI extends JFrame implements ActionListener
 	private JPanel targets_adminTab = new JPanel(null);
 	private JPanel targets_fencerTab = new JPanel(null);
 	private JPanel competition_adminTab = new JPanel(null);
+	private JPanel verifyFightsTab = new JPanel(null);
 	
 	
-
 	/* 
 	Below, GUI Components for the 'managing accounts'
 	tab are declared.
@@ -77,7 +77,7 @@ public class GUI extends JFrame implements ActionListener
 	Below, GUI Components for the 'managing fights'
 	tab are declared.
 	*/
-
+	String[][] fightRecords_;
 	private JLabel lblAddFight = new JLabel();
 	private JLabel lblDeleteFight = new JLabel();
 
@@ -143,6 +143,7 @@ public class GUI extends JFrame implements ActionListener
 	private JLabel lblWins = new JLabel();
 
 	private JButton btLogOff = new JButton();
+	private JButton btSettings = new JButton();
 
 
 	/* 
@@ -154,6 +155,11 @@ public class GUI extends JFrame implements ActionListener
 	private JScrollPane rankingTableScroll;
 
 	private JLabel lblRankingTableTabDescription;
+	private String[][] rankingTableSorted;
+
+	private JButton btSort = new JButton();
+
+	private JComboBox cbSelectColumn;
 
 	/* 
 	Below, GUI Components for the 'Target (Admin)'
@@ -164,7 +170,7 @@ public class GUI extends JFrame implements ActionListener
 	private JLabel lblSelectFencer = new JLabel();
 
 	private JTextField tfTargetTitle = new JTextField();
-	private JTextField tfTarget = new JTextField();
+	private JTextArea tfTarget = new JTextArea();
 
 	private JButton btLoad = new JButton();
 	private JButton btViewTarget = new JButton();
@@ -176,6 +182,8 @@ public class GUI extends JFrame implements ActionListener
 	private DefaultTableModel targetsTableModel;
 	private JTable targetsTable;
 	private JScrollPane targetsTableScroll;
+
+	private String[][] getUserTargets;
 
 
 	/* 
@@ -209,6 +217,34 @@ public class GUI extends JFrame implements ActionListener
 	private JScrollPane competitionAdminTableScroll;
 
 
+	/*
+		GUI Components regarding the verification of fights.
+	*/
+
+	private DefaultTableModel verificationFightsTableModel;
+	private JTable verificationFightsTable;
+	private JScrollPane verificationFightsTableScroll;
+
+
+	public void setupVerifyFights(String[][] unverifiedFights)
+	{}
+/*		// Amount of unverified fights
+		int amountUnverified = unverifiedFights.length;
+
+		// Setup for the table for selected fencers.
+		String[] headings = {"Winner","Winner Score","Loser","Loser Score"};
+
+		verificationFightsTableModel = new DefaultTableModel(unverifiedFights,headings);
+
+		verificationFightsTable = new JTable(competitionAdmin_TableModel);
+		verificationFightsTable.setFont(new Font("Courier",Font.PLAIN,30));
+
+		verificationFightsTableScroll = new JScrollPane(verificationFightsTable);
+		verificationFightsTableScroll.setSize(700,500);
+		verificationFightsTableScroll.setLocation(400,150);
+
+	}
+	*/
 
 	public void setupCompetitionAdmin(String[][] tableContents)
 	{
@@ -234,14 +270,14 @@ public class GUI extends JFrame implements ActionListener
 		lblCompetitionSelectedFencer.setText("Selected Fencers");
 
 		// Setup for add fencer button
-		btAddSelectedFencer.setLocation(100,200);
+		btAddSelectedFencer.setLocation(140,200);
 		btAddSelectedFencer.setSize(100,50);
 		btAddSelectedFencer.addActionListener(this);
 		btAddSelectedFencer.setFont(new Font("Courier",Font.PLAIN,25));
 		btAddSelectedFencer.setText("Add");
 
 		// Setup for remove fencer button
-		btRemoveSelectedFencer.setLocation(100,300);
+		btRemoveSelectedFencer.setLocation(140,300);
 		btRemoveSelectedFencer.setSize(150,50);
 		btRemoveSelectedFencer.addActionListener(this);
 		btRemoveSelectedFencer.setFont(new Font("Courier",Font.PLAIN,25));
@@ -306,7 +342,7 @@ public class GUI extends JFrame implements ActionListener
 
 
 
-	public void setupTargetsAdmin(String[][] tableContents)
+	public void setupTargetsAdmin(String[][] tableContents, String[] fencer)
 	{
 		// Setup for title
 		lblTargetTitle.setLocation(10,10);
@@ -373,7 +409,7 @@ public class GUI extends JFrame implements ActionListener
 		targetsTableScroll.setSize(350,300);
 		targetsTableScroll.setLocation(10,225);
 
-		cbSelectFencerTargets = new JComboBox(new String[] {"-"});
+		cbSelectFencerTargets = new JComboBox(fencer);
 		cbSelectFencerTargets.setBounds(10,175,100,25);
 
 		targets_adminTab.add(btLoad);
@@ -386,9 +422,6 @@ public class GUI extends JFrame implements ActionListener
 		targets_adminTab.add(cbSelectFencerTargets);
 		targets_adminTab.add(tfTarget);
 		targets_adminTab.add(btDeleteTarget);
-
-
-
 	}
 
 	public void setUpManagingAccounts(String[][] tableContents)
@@ -431,6 +464,20 @@ public class GUI extends JFrame implements ActionListener
 		managingAccountsTab.add(btDeleteManagingAccounts);
 		managingAccountsTab.add(btPermissions);
 		
+	}
+
+	public void setUpTargetPopUpBox(String targetInfo)
+	{
+		JTextArea target = new JTextArea();
+
+
+		target.setFont(new Font("Courier",Font.PLAIN,35));
+		target.setText(targetInfo);
+		target.setBounds(10,10,20,20);
+
+		Object[] targetPopUp = {target};
+
+		int option = JOptionPane.showConfirmDialog(null, targetPopUp, "Target", JOptionPane.OK_CANCEL_OPTION);
 	}
 
 	public boolean setUpEditPopUp(String[] tempRecordUserClickedOn)
@@ -556,51 +603,54 @@ public class GUI extends JFrame implements ActionListener
 	{
 
 		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
-		lblEnterUsr.setLocation(75,100);
-		lblEnterUsr.setSize(100,50);
+		lblEnterUsr.setLocation(10,50);
+		lblEnterUsr.setSize(275,50);
 		lblEnterUsr.setOpaque(true);
 		lblEnterUsr.setText("Enter Name:");
 		
-		lblEnterPasswd.setLocation(75,200);
-		lblEnterPasswd.setSize(100,50);
+		lblEnterPasswd.setLocation(10,125);
+		lblEnterPasswd.setSize(275,50);
 		lblEnterPasswd.setOpaque(true);
 		lblEnterPasswd.setFont(new Font("Courier",Font.PLAIN,20));
 		lblEnterPasswd.setText("Enter Password:");
 		
-		lblReEnterPasswd.setLocation(75,300);
-		lblReEnterPasswd.setSize(125,50);
+		lblReEnterPasswd.setLocation(10,200);
+		lblReEnterPasswd.setSize(275,50);
 		lblReEnterPasswd.setOpaque(true);
-		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
+		lblReEnterPasswd.setFont(new Font("Courier",Font.PLAIN,20));
 		lblReEnterPasswd.setText("Re-enter Password:");
 
 		lblvalidationRules.setLocation(550,10);
-		lblvalidationRules.setSize(400,200);
+		lblvalidationRules.setSize(325,400);
 		lblvalidationRules.setOpaque(true);
 		lblvalidationRules.setFont(new Font("Courier",Font.PLAIN,20));
-		lblvalidationRules.setText("<html><span>- Username must have a length greater than 2 but less than 21.<br>- Username must contain not symbols.<br>- Passwords must be greater than 9 characters<br>- Password must contain atleast one special character, number and letter.</span></html>");
+		lblvalidationRules.setText("<html><span>VALIDATION RULES<br><br>- Username must have a length greater than 2 but less than 21.<br>- Username must contain no symbols.<br>- Passwords must be greater than 9 characters<br>- Password must contain atleast one special character, number and letter.</span></html>");
 		
 		pfEnterPasswd.addActionListener(this);
-		pfEnterPasswd.setLocation(200,200);
+		pfEnterPasswd.setFont(new Font("Courier",Font.PLAIN,20));
+		pfEnterPasswd.setLocation(275,125);
 		pfEnterPasswd.setSize(200,50);
 		
 		pfReEnterPasswd.addActionListener(this);
-		pfReEnterPasswd.setLocation(200,300);
+		pfReEnterPasswd.setFont(new Font("Courier",Font.PLAIN,20));
+		pfReEnterPasswd.setLocation(275,200);
 		pfReEnterPasswd.setSize(200,50);
 
 		tfEnterUsr.addActionListener(this);
-		tfEnterUsr.setLocation(200,100);
+		tfEnterUsr.setLocation(275,50);
+		tfEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
 		tfEnterUsr.setSize(200,50);
 
-		btSubmitUserDetails.setLocation(200,400);
-		btSubmitUserDetails.setSize(200,50);
+		btSubmitUserDetails.setLocation(200,300);
+		btSubmitUserDetails.setSize(150,50);
 		btSubmitUserDetails.addActionListener(this);
-		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
+		btSubmitUserDetails.setFont(new Font("Courier",Font.PLAIN,20));
 		btSubmitUserDetails.setText("Submit");
 		
-		btBack.setLocation(10,400);
-		btBack.setSize(200,50);
+		btBack.setLocation(10,300);
+		btBack.setSize(100,50);
 		btBack.addActionListener(this);
-		lblEnterUsr.setFont(new Font("Courier",Font.PLAIN,20));
+		btBack.setFont(new Font("Courier",Font.PLAIN,20));
 		btBack.setText("Back");
 		
 		createAnAccountTab.add(btBack);
@@ -673,80 +723,79 @@ public class GUI extends JFrame implements ActionListener
 	{
 		String[] headings = {"Rank","Name of Fencer","No. of Fights","Ranking Points"};
 
-		//String[] rankingDataRecords = HomePage.getRankingData();
-
-		/*int amountOfRecords = rankingDataRecords.length;
-
-		String[][] rankingTableData = new String[0][0];
-
-		if(!rankingDataRecords[0].equals(""))
-		{
-			rankingTableData = new String[amountOfRecords][4];
-
-			for(int i=0;i<amountOfRecords;i++)
-			{
-				String[] recordArr = rankingDataRecords[i].split(",");
-				rankingTableData[i][0] = recordArr[0];
-				rankingTableData[i][1] = recordArr[1];
-				rankingTableData[i][2] = recordArr[2];
-				rankingTableData[i][3] = recordArr[3];
-			}
-		}
-		*/;
-
 		rankingTableModel = new DefaultTableModel(tableOfContents,headings);
 
 		rankingTable = new JTable(rankingTableModel);
-		rankingTable.setFont(new Font("Courier",Font.PLAIN,14));
-
+		rankingTable.setFont(new Font("Courier",Font.PLAIN,18));
+		rankingTable.getTableHeader().setFont(new Font("Courier",Font.PLAIN,20));
+		rankingTable.setRowHeight(30);
 		rankingTableScroll = new JScrollPane(rankingTable);
-		rankingTableScroll.setSize(700,500);
+		rankingTableScroll.setSize(700,450);
 		rankingTableScroll.setLocation(10,10);	
 
+		btSort.setLocation(500,550);
+		btSort.setSize(200,50);
+		btSort.setFont(new Font("Courier",Font.PLAIN,22));
+		btSort.addActionListener(this);
+		btSort.setText("Sort");
+
+		cbSelectColumn = new JComboBox(new String[]{"-","By Rank","By Name","By Fights"});
+		cbSelectColumn.setBounds(400,550,100,25);
+
 		rankingTableTab.add(rankingTableScroll);
+		rankingTableTab.add(btSort);
+		rankingTableTab.add(cbSelectColumn);
 	}
 
-	public void setupHomePage()
+	public void setupHomePage(String rank,
+								String username,
+								String ptsRequired,
+								String rankRequired,
+								String noOfWins,
+								String noOfLosses)
 	{
-		ImageIcon icon = new ImageIcon("settingsIcon.png");
-		JButton btSettings = new JButton(icon);
+		noOfWins="2";
+		noOfLosses="3";
 
-		btSettings.setLocation(375,500);
-		btSettings.setSize(200,50);
+		ImageIcon icon = new ImageIcon("settingsIcon.png");
+		btSettings = new JButton(icon);
+
+		btSettings.setLocation(400,500);
+		btSettings.setSize(65,65);
 		btSettings.addActionListener(this);
 
 		lblPageTitle.setLocation(10,0);
-		lblPageTitle.setSize(400,50);
+		lblPageTitle.setSize(700,50);
 		lblPageTitle.setOpaque(true);
 		lblPageTitle.setFont(new Font("Courier",Font.PLAIN,35));
-		lblPageTitle.setText("You are logged on as <Username>");
+		lblPageTitle.setText("You are logged on as "+username);
 
 		lblCurrentRank.setLocation(10,100);
-		lblCurrentRank.setSize(400,50);
+		lblCurrentRank.setSize(500,50);
 		lblCurrentRank.setOpaque(true);
 		lblCurrentRank.setFont(new Font("Courier",Font.PLAIN,22));
-		lblCurrentRank.setText("Your Current Rank is: <Rank No.>");
+		lblCurrentRank.setText("Your Current Rank is: "+rank);
 
 		lblPtsRequired.setLocation(10,200);
-		lblPtsRequired.setSize(400,50);
+		lblPtsRequired.setSize(600,50);
 		lblPtsRequired.setOpaque(true);
 		lblPtsRequired.setFont(new Font("Courier",Font.PLAIN,22));
-		lblPtsRequired.setText("Points Required for Rank <Rank No.-1>:<Points>");
+		lblPtsRequired.setText("Points Required for Rank "+rankRequired+":"+ptsRequired);
 
 		lblWins.setLocation(10,300);
-		lblWins.setSize(400,50);
+		lblWins.setSize(500,50);
 		lblWins.setOpaque(true);
 		lblWins.setFont(new Font("Courier",Font.PLAIN,22));
-		lblWins.setText("Wins: <No. of Wins>");
+		lblWins.setText("Wins: "+noOfWins);
 
 		lblLosses.setLocation(10,400);
-		lblLosses.setSize(400,50);
+		lblLosses.setSize(500,50);
 		lblLosses.setOpaque(true);
 		lblLosses.setFont(new Font("Courier",Font.PLAIN,22));
-		lblLosses.setText("Losses: <No. of Losses>");
+		lblLosses.setText("Losses: "+noOfLosses);
 
-		btLogOff.setLocation(450,500);
-		btLogOff.setSize(200,50);
+		btLogOff.setLocation(475,500);
+		btLogOff.setSize(200,75);
 		btLogOff.addActionListener(this);
 		btLogOff.setFont(new Font("Courier",Font.PLAIN,35));
 		btLogOff.setText("Logout");
@@ -762,8 +811,10 @@ public class GUI extends JFrame implements ActionListener
 
 	}
 
-	public void setUpFightsTab()
+	public void setUpFightsTab(String[][] fightRecords)
 	{
+		fightRecords_ = fightRecords;
+
 		lblAddFight.setLocation(10,0);
 		lblAddFight.setSize(300,50);
 		lblAddFight.setOpaque(true);
@@ -872,23 +923,10 @@ public class GUI extends JFrame implements ActionListener
 		cbLoser.setBounds(10,350,100,25);
 		cbLoserScore.setBounds(10,450,50,25);
 
-		/*
+	
 		String[] headings = {"Winner","Winner Points","Loser","Loser Points"};
 
-		boolean areThereFights = false;
-
-		areThereFights = HomePage.doFightsExist();
-
-		if(areThereFights == true)
-		{
-			fightRecords = HomePage.getFightData();
-		}
-		else
-		{
-			fightRecords = new String[0][4];
-		}
-
-		fightsTableModel = new DefaultTableModel(fightRecords,headings);
+		fightsTableModel = new DefaultTableModel(fightRecords_,headings);
 
 		fightsTable = new JTable(fightsTableModel);
 
@@ -896,12 +934,11 @@ public class GUI extends JFrame implements ActionListener
 
 		fightsTableScroll.setSize(300,400);
 		fightsTableScroll.setLocation(400,50);
-		*/
 
 		fightsTab.add(btSubmit);
 		fightsTab.add(tfLoserScoreCustom);
 		fightsTab.add(lblLoserScoreCustom);
-		//fightsTab.add(fightsTableScroll);
+		fightsTab.add(fightsTableScroll);
 		fightsTab.add(cbLoserScore);
 		fightsTab.add(lblPromptLoserScore);
 		fightsTab.add(cbLoser);
@@ -988,32 +1025,34 @@ public class GUI extends JFrame implements ActionListener
 		*/
 		//boolean usernameContentsCheck = (tempUsername.contains("[a-zA-Z]+"))
 										
-		for(int i=0;i<tempPassword.length();i++)
+		/*for(int i=0;i<tempPassword.length();i++)
 		{
-			if(specialChars.contains(tempPassword.substring(i,1)))
+			if((tempPassword.split("")[i]).contains(specialChars))
 			{
 				amountOfSpecialChars++;
+				System.out.println("-");
 			}
-			else if(numbers.contains(tempPassword.substring(i,1)))
+			else if(tempPassword.contains(numbers))
 			{
 				amountOfNumbers++;
+				System.out.println("-");
 			}
-			else if(alphabet.contains(tempPassword.substring(i,1)))
+			else if(tempPassword.contains(alphabet))
 			{
 				amountOfLetters++;
+				System.out.println("-");
 			}
 		}
 
 		contentsCheck = (amountOfLetters>1)&&(amountOfNumbers>1)&&(amountOfSpecialChars>1);
-
+		*/
 
 		validationSuccessful = presenceCheck
 								&&
 								usernameLengthCheck
 								&&
-								passwordLengthCheck
-								&&
-								contentsCheck;
+								passwordLengthCheck;
+								
 
 		return validationSuccessful;
 
@@ -1059,21 +1098,79 @@ public class GUI extends JFrame implements ActionListener
 	public void displaySystem(User user)
 	{
 		Fight fight = new Fight();
+		UserList userRecords = new UserList();
+
+		permissions = user.getPermission();
+		String username = user.getUsername();
+		String[][] rank = user.sortRankingPoints();
+
+		String[] fencerNames = userRecords.getAllFencerNames();
 
 		String[][] tableOfContents = fight.getTableContents();
 
-		permissions = user.getPermission();
+		String[][] unverifiedFights = fight.getUnverifiedFights(username);
 
-	
+		String userRank = ""; 
+		String userRankAbove = "";
+		int count = rank.length;
+		int rankingPtsRequired;
+		String rankingPtsRequiredStr = "";
+
+
+		for(int i=0;i<rank.length;i++)
+		{
+			if(rank[i][0].equals(username))
+			{
+				userRank = Integer.toString(count);
+				if(count>1)
+				{
+					userRankAbove = Integer.toString(count+1);
+					rankingPtsRequired = Integer.parseInt(rank[i+1][1])-Integer.parseInt(rank[i][1]);
+					rankingPtsRequiredStr = Integer.toString(rankingPtsRequired);
+					userRankAbove = Integer.toString(count+1);
+					
+				}
+				else
+				{
+					rankingPtsRequiredStr = "0";
+					userRankAbove = "-";
+				}
+
+			}
+			count--;
+		}
+
+
+		//getAmountOfFights
+
+		rankingTableSorted = new String[rank.length][4];
+
+		for(int j=0;j<rankingTableSorted.length;j++)
+		{
+			rankingTableSorted[j][0] = Integer.toString(j+1);
+			rankingTableSorted[j][1] = rank[rankingTableSorted.length-j-1][0];
+			rankingTableSorted[j][2] = "-";
+			rankingTableSorted[j][3] = rank[rankingTableSorted.length-j-1][1];
+		}
+
+
+		if(!(unverifiedFights.length==0))
+		{
+			//setupVerifyFights();
+			//myTabs.removeAll();
+			//myTabs.addTab("Verify Fights",verifyFightsTab);
+
+		}
+		
 		if(permissions.equals("Root"))
 		{
 			myTabs.remove(0);
 			
-			setUpFightsTab();
-			setupHomePage();
+			setUpFightsTab(fight.getFightTableContent());
+			setupHomePage(userRank,username,rankingPtsRequiredStr,userRankAbove,"-","-");
 			setUpManagingAccounts(tableOfContents);
-			setupRankingTable(new String[0][4]);
-			setupTargetsAdmin(new String[0][2]);
+			setupRankingTable(rankingTableSorted);
+			setupTargetsAdmin(new String[0][2],fencerNames);
 			setupCompetitionAdmin(new String[0][0]);
 			
 			myTabs.addTab("Home Page",homePageTab);
@@ -1094,10 +1191,10 @@ public class GUI extends JFrame implements ActionListener
 		{
 			myTabs.remove(0);
 
-			setUpFightsTab();
-			setupHomePage();
-			setupRankingTable(new String[0][4]);
-			setupTargetsAdmin(new String[0][2]);
+			setUpFightsTab(fight.getFightTableContent());
+			setupHomePage(userRank,username,rankingPtsRequiredStr,userRankAbove,"-","-");
+			setupRankingTable(rankingTableSorted);
+			setupTargetsAdmin(new String[0][2],fencerNames);
 			setupCompetitionAdmin(new String[0][0]);
 
 			myTabs.addTab("Home Page",homePageTab);
@@ -1116,9 +1213,9 @@ public class GUI extends JFrame implements ActionListener
 		{
 			myTabs.remove(0);
 
-			setUpFightsTab();
-			setupHomePage();
-			setupTargetsFencer(new String[0][4]);
+			setUpFightsTab(fight.getFightTableContent());
+			setupHomePage(userRank,username,rankingPtsRequiredStr,userRankAbove,"-","-");
+			setupTargetsFencer(rankingTableSorted);
 			setupRankingTable(new String[0][4]);
 
 			myTabs.addTab("Home Page",homePageTab);
@@ -1135,8 +1232,8 @@ public class GUI extends JFrame implements ActionListener
 		else
 		{
 			myTabs.remove(0);
-			setupHomePage();
-			setupRankingTable(new String[0][4]);
+			setupHomePage(userRank,username,rankingPtsRequiredStr,userRankAbove,"-","-");
+			setupRankingTable(rankingTableSorted);
 
 			myTabs.addTab("Home Page",homePageTab);
 			myTabs.addTab("Ranking Table",rankingTableTab);
@@ -1201,7 +1298,7 @@ public class GUI extends JFrame implements ActionListener
 		{
 			myTabs.remove(0);		
 			setUpCreateAnAccountTab();
-			this.setSize(500,900);
+			this.setSize(900,475);
 			myTabs.addTab("Create an Account",createAnAccountTab);
 
 		}
@@ -1278,16 +1375,16 @@ public class GUI extends JFrame implements ActionListener
 			resetCreateAnAccountFields();
 
 		}
-/*
+
 		else if(e.getSource()==btLogOff)
 		{
-			myTabs.remove(0);		
+			myTabs.removeAll();		
 			setUpLoginTab();
 			this.setSize(800,500);
 			myTabs.addTab("Login",loginTab);
 		}
 
-*/
+
 		else if(e.getSource()==btPermissions)
 		{
 			String filename = "userDetails.txt";
@@ -1441,59 +1538,24 @@ public class GUI extends JFrame implements ActionListener
 				newFight.processNewFight();
 				fight.storeFight(newFight);
 
-
+				setUpPopUpBox("Fight has been added.");
 			}
 
-			/*
-			// Creating a new instance of a Fight.
-
-			GenerateFight newFight;
-			
-			// Gathering all the relevant information to be able to store the fight.
-
-			String winnerName = cbWinner.getSelectedItem().toString();
-			String loserName = cbLoser.getSelectedItem().toString();
-
-			String customScoreLimit = tfScoreLimitCustom.getText();
-
-			String winnerScore;
-
-			if(customScoreLimit.equals(""))
-			{
-				winnerScore = cbScoreLimit.getSelectedItem().toString();
-			}
-
-			else
-			{
-				winnerScore = customScoreLimit;
-			}
-
-			String loserScore = cbLoserScore.getSelectedItem().toString();
-
-			updateFightTable(winnerName,loserName,winnerScore,loserScore);
-
-			// All the relevant information that we need to create a fight has been gathered.
-			newFight = new GenerateFight(winnerName,loserName,winnerScore,loserScore);
-
-			newFight.processFightScores();
-
-			newFight.storeFight();
-			*/
 		}
 
-/*		
-		
+	
+	
 		else if(e.getSource()==btEdit)
 		{
 			boolean editConfirmed = false;
+			String[] recordClickedOn = new String[4];
 
-			
-			
 			try
 			{
 				for(int i=0;i<4;i++)
 				{
-					field = fightsTable.getValueAt(fightsTable.getSelectedRow(), i).toString();
+					String field = fightsTable.getValueAt(fightsTable.getSelectedRow(), i).toString();
+					System.out.println(fightsTable.getSelectedRow());
 					recordClickedOn[i] = field;
 				}
 
@@ -1503,18 +1565,23 @@ public class GUI extends JFrame implements ActionListener
 			{
 				System.out.println("Error, Code=1.1");
 			}	
-			/*
+			
 			if(editConfirmed)
 			{
-				editFight()
+				//editFight();
 			}
 			
 		}
 
 		else if(e.getSource()==btDelete)
 		{
+			FightList deleteFight = new FightList();
+			String field;
+			String fightID;
 			try
 			{
+				boolean editConfirmed = false;
+				String[] recordClickedOn = new String[4];
 
 				for(int i=0;i<4;i++)
 				{
@@ -1523,6 +1590,12 @@ public class GUI extends JFrame implements ActionListener
 				}
 
 				boolean confirmDelete = setUpDeletePopUp();
+
+				if(confirmDelete)
+				{
+					fightID = fightRecords_[fightsTable.getSelectedRow()][4];
+					deleteFight.deleteFight(fightID);
+				}
 
 			}
 			catch(Exception ex)
@@ -1533,7 +1606,59 @@ public class GUI extends JFrame implements ActionListener
 
 				
 		}
-		*/
+		
+
+		else if(e.getSource()==btLoad)
+		{
+			// Load the current targets of the user.
+			// Get the user's ID.
+			UserList user = new UserList();
+			Target usersTargets = new Target();
+
+			String username = cbSelectFencerTargets.getSelectedItem().toString();
+
+			String userID = user.searchAndReturnData(username,0,3);
+
+			// Get targets.
+			getUserTargets = usersTargets.getUserTargets(userID);
+
+			String setterName;
+
+			for(int i=0;i<getUserTargets.length;i++)
+			{
+				setterName = user.searchAndReturnData(getUserTargets[i][4],3,0);
+
+				// Clearing the table.
+				targetsTableModel.setRowCount(0);
+				targetsTableModel.addRow(new Object[]{getUserTargets[i][2],setterName});
+			}
+
+		}
+
+		else if(e.getSource()==btSettings)
+		{
+			setUpPopUpBox("Load Settings");
+		}
+
+		/*else if(e.getSource()==btViewTarget)
+		{
+
+
+setUpTargetPopUpBox
+
+		String targetsTable.getValueAt(userTable.getSelectedRow(), i).toString();
+		
+		targetsTableModel = new DefaultTableModel(tableContents,headings);
+
+		targetsTable = new JTable(targetsTableModel);
+		targetsTable.setFont(new Font("Courier",Font.PLAIN,14));
+
+		targetsTableScroll = new JScrollPane(targetsTable);
+		targetsTableScroll.setSize(350,300);
+		targetsTableScroll.setLocation(10,225);
+		
+
+		}*/
 		
 	}
 

@@ -49,11 +49,11 @@ public class RankingPointsAlgorithm
 
 	public void setRankingPoints1(int tempRankingPts1)
 	{
-		rankingPoints1 = tempRankingPts1;
+		currentRankingPts1 = tempRankingPts1;
 	}
 	public void setRankingPoints2(int tempRankingPts2)
 	{
-		rankingPoints2 = tempRankingPts2;
+		currentRankingPts2 = tempRankingPts2;
 	}
 	public void setScore1(int tempScore1)
 	{
