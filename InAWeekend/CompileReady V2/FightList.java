@@ -18,7 +18,7 @@ public class FightList
 		for(int i=0;i<fightContentArr.length;i++)
 		{
 			fightRecordArr = fightContentArr[i].split(",");
-			if(fightRecordArr.length<8)
+			if(fightRecordArr.length>6)
 			{
 				if(!fightRecordArr[7].equals(fightID))
 				{

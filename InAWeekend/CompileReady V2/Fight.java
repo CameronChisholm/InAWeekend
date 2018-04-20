@@ -35,7 +35,7 @@ public class Fight
 		for(int i=0;i<fightContentArr.length;i++)
 		{
 			fightRecordArr = fightContentArr[i].split(",");
-			if(fileContent_Fights.equals(""))
+			if(fightRecordArr.length<5)
 			{
 				unverifiedFights = new String[0][0];
 			}
@@ -98,7 +98,7 @@ public class Fight
 			{
 				fightRecordArr = fightContentArr[j].split(",");
 
-				if(fileContent_Fights.equals(""))
+				if(fightRecordArr.length<4)
 				{
 					amountOfFights = 0;
 				}
@@ -144,7 +144,7 @@ public class Fight
 		for(int i=0;i<fightContentArr.length;i++)
 		{
 			fightRecordArr = fightContentArr[i].split(",");
-			if(fileContent_Fights.equals("")){}
+			if(fightRecordArr.length<5){}
 			else if(fightRecordArr[6].equals("0-0"))
 			{
 				winnerID_ = fightRecordArr[2];
@@ -263,17 +263,20 @@ public class Fight
 		int highest = 0;
 		String[] RecordArr;
 
+		
 		for(int i=0;i<fightDataArr.length;i++)
 		{
 			RecordArr = fightDataArr[i].split(",");
-			tempFightID = Integer.parseInt(RecordArr[7]);
+			if(RecordArr.length>4)
+			{					
+				tempFightID = Integer.parseInt(RecordArr[7]);
 
-			if(tempFightID>highest)
-			{
-				highest = tempFightID;
+				if(tempFightID>highest)
+				{
+					highest = tempFightID;
+				}
 			}
 		}
-		
 		return highest+1;
 	}
 	

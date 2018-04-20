@@ -574,10 +574,10 @@ public class GUI extends JFrame implements ActionListener
 		lblSelectLoserScoreEdit.setFont(new Font("Courier",Font.PLAIN,20));
 		lblSelectLoserScoreEdit.setText("Enter Loser's Score");
 	
-		tfScoreLimit.setText(tempRecordUserClickedOn[0]);
+		tfScoreLimit.setText(tempRecordUserClickedOn[2]);
 		tfWinnerName.setText(tempRecordUserClickedOn[1]);
-		tfLoserName.setText(tempRecordUserClickedOn[2]);
-		tfLoserScore.setText(tempRecordUserClickedOn[3]);
+		tfLoserName.setText(tempRecordUserClickedOn[3]);
+		tfLoserScore.setText(tempRecordUserClickedOn[4]);
 
 		Object[] newUserInformation = {
 		    "", lblScoreLimitEdit,
@@ -1369,6 +1369,89 @@ public class GUI extends JFrame implements ActionListener
 		}
 
 	}
+	public void addFight(String tempLoggedInUser,
+							String tempWinnerName,
+							String tempLoserName,
+							String tempWinnerScore,
+							String tempLoserScore)
+	{
+			/*
+				Validation of the drop-boxes
+				and text fields when adding a fight.  
+			*/
+			String loggedInUser = tempLoggedInUser;
+			String winnerName = tempWinnerName;
+			String loserName = tempLoserName;
+			String winnerScore = tempWinnerScore;
+			String loserScore = tempLoserScore;
+			String[] verificationStatus = new String[] {"",""};
+			/*
+				This is to see if the current user logged in,
+			 	is one of the fencers in the fight. If they are in the fight,
+			 	then only one other person will have to verify the fight.
+			*/
+			
+			if(loggedInUser.equals(winnerName))
+			{
+				verificationStatus = new String[] {"0",loserName};
+			}
+			else if(loggedInUser.equals(loserName))
+			{
+				verificationStatus = new String[] {"0",winnerName};
+			}
+
+
+			else
+			{
+				verificationStatus = new String[] {winnerName,loserName};
+			}
+
+			int winnerScoreInt = 0;
+			int loserScoreInt = 0;;
+			
+			try
+			{
+				winnerScoreInt = Integer.parseInt(winnerScore);
+				loserScoreInt = Integer.parseInt(loserScore);
+			}
+			catch(Exception ex)
+			{
+				setUpPopUpBox("Only enter integer scores.");
+			}
+
+			if(winnerScoreInt<loserScoreInt)
+			{
+				setUpPopUpBox("Loser score cannot be greater than the score limit.");
+			}
+			else if(winnerScoreInt==loserScoreInt)
+			{
+				setUpPopUpBox("Loser score cannot be the same as the score limit.");
+			}
+			else if(winnerName.equals(loserName))
+			{
+				setUpPopUpBox("The fencers cannot be the same.");
+			}
+			else
+			{
+				Fight newFight = new Fight();
+				FightList fight = new FightList();
+				newFight.setWinnerName(winnerName);
+				newFight.setLoserName(loserName);
+				newFight.setLoserPts(loserScore);
+				newFight.setWinnerPts(winnerScore);
+				newFight.setVerificationStatus(verificationStatus);
+
+				newFight.processNewFight();
+				fight.storeFight(newFight);
+
+				
+
+				fightsTableModel.addRow(new Object[]{"Unverified",winnerName,winnerScore,loserName,loserScore});
+
+				setUpPopUpBox("Fight has been added.");
+			}
+
+		}
 
 	public void actionPerformed(ActionEvent e)
  	{
@@ -1553,6 +1636,7 @@ public class GUI extends JFrame implements ActionListener
 
 		else if(e.getSource()==btSubmit)
 		{
+
 			/*
 				Validation of the drop-boxes
 				and text fields when adding a fight.  
@@ -1561,32 +1645,15 @@ public class GUI extends JFrame implements ActionListener
 			String winnerName = cbWinner.getSelectedItem().toString();
 			String loserName = cbLoser.getSelectedItem().toString();
 			String[] verificationStatus = new String[] {"",""};
+			
+
 			/*
 				This is to see if the current user logged in,
 			 	is one of the fencers in the fight. If they are in the fight,
 			 	then only one other person will have to verify the fight.
 			*/
-			
-			if(loggedInUser.equals(winnerName))
-			{
-				verificationStatus = new String[] {"0",loserName};
-			}
-			else if(loggedInUser.equals(loserName))
-			{
-				verificationStatus = new String[] {"0",winnerName};
-			}
-
-
-			else
-			{
-				verificationStatus = new String[] {winnerName,loserName};
-			}
-
-
 			String winnerScore = "";
 			String loserScore = "";
-			int winnerScoreInt = 0;
-			int loserScoreInt = 0;;
 			boolean cbScoreLimitPopulated = !cbScoreLimit.getSelectedItem().toString().equals("-"); 
 			boolean tfScoreLimitCustomPopulated = !tfScoreLimitCustom.getText().equals("");
 
@@ -1625,48 +1692,7 @@ public class GUI extends JFrame implements ActionListener
 				}
 			}
 
-			try
-			{
-				winnerScoreInt = Integer.parseInt(winnerScore);
-				loserScoreInt = Integer.parseInt(loserScore);
-			}
-			catch(Exception ex)
-			{
-				setUpPopUpBox("Only enter integer scores.");
-			}
-
-			if(winnerScoreInt<loserScoreInt)
-			{
-				setUpPopUpBox("Loser score cannot be greater than the score limit.");
-			}
-			else if(winnerScoreInt==loserScoreInt)
-			{
-				setUpPopUpBox("Loser score cannot be the same as the score limit.");
-			}
-			else if(winnerName.equals(loserName))
-			{
-				setUpPopUpBox("The fencers cannot be the same.");
-			}
-			else
-			{
-				Fight newFight = new Fight();
-				FightList fight = new FightList();
-				newFight.setWinnerName(winnerName);
-				newFight.setLoserName(loserName);
-				newFight.setLoserPts(loserScore);
-				newFight.setWinnerPts(winnerScore);
-				newFight.setVerificationStatus(verificationStatus);
-
-				newFight.processNewFight();
-				fight.storeFight(newFight);
-
-				
-
-				fightsTableModel.addRow(new Object[]{"Unverified",winnerName,winnerScore,loserName,loserScore});
-
-				setUpPopUpBox("Fight has been added.");
-			}
-
+			addFight(loggedInUser,winnerName,loserName,winnerScore,loserScore);	
 		}
 
 	
@@ -1674,12 +1700,13 @@ public class GUI extends JFrame implements ActionListener
 		else if(e.getSource()==btEdit)
 		{
 			boolean editConfirmed = false;
-			String[] recordClickedOn = new String[4];
+			String[] recordClickedOn = new String[5];
 			String fightID;
+			FightList deleteFight = new FightList();
 
 			try
 			{
-				for(int i=0;i<4;i++)
+				for(int i=0;i<5;i++)
 				{
 					String field = fightsTable.getValueAt(fightsTable.getSelectedRow(), i).toString();
 					System.out.println(fightsTable.getSelectedRow());
@@ -1690,13 +1717,23 @@ public class GUI extends JFrame implements ActionListener
 			}
 			catch(Exception ex)
 			{
-				System.out.println("Error, Code=1.1");
+				ex.printStackTrace();
 			}	
 			
 			if(editConfirmed)
 			{
 				//editFight();
+				String currentUserLoggedIn = currentUser.getUsername();
+				String scoreLimit = tfScoreLimit.getText();
+				String winnerName = tfWinnerName.getText();
+				String loserName = tfLoserName.getText();
+				String loserScore = tfLoserScore.getText();
 
+				System.out.println(fightsTable.getSelectedRow());
+				fightID = fightRecords_[fightsTable.getSelectedRow()][5];
+				fightsTableModel.removeRow(fightsTable.getSelectedRow());
+				deleteFight.deleteFight(fightID);
+				addFight(currentUserLoggedIn,winnerName,loserName,scoreLimit,loserScore);
 			}
 			
 		}
@@ -1721,7 +1758,7 @@ public class GUI extends JFrame implements ActionListener
 
 				if(confirmDelete)
 				{
-					fightID = fightRecords_[fightsTable.getSelectedRow()][4];
+					fightID = fightRecords_[fightsTable.getSelectedRow()][5];
 					fightsTableModel.removeRow(fightsTable.getSelectedRow());
 					deleteFight.deleteFight(fightID);
 				}

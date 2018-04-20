@@ -94,36 +94,40 @@ public class UserList
 		for(int i=0;i<fightRecordsArr.length;i++)
 		{
 			RecordArr = fightRecordsArr[i].split(",");
-			field = RecordArr[6];
-			if(field.equals("0-0"))
-			{}
-			else
-			{
-				fencerNames = field.split("-");
-
-				match = fencerNames[0].equals(fencerName)||fencerNames[1].equals(fencerName);
-				System.out.println(fencerNames[0]);
-				System.out.println(fencerName);
-				System.out.println(match);
-
-				if(match)
-				{
-					String winner = searchAndReturnData(RecordArr[2],3,0);
-					String loser = searchAndReturnData(RecordArr[3],3,0);
-					listOfFights[i][0] = winner;
-					listOfFights[i][1] = RecordArr[4];
-					listOfFights[i][2] = loser;
-					listOfFights[i][3] = RecordArr[5];
-					listOfFights[i][4] = RecordArr[7];
-					listOfFights[i][5] = RecordArr[6];
-				}
-			}
-
 			
+			if(RecordArr.length>6)
+			{
+				field = RecordArr[6];
+				if(field.equals("0-0"))
+				{}
+				else
+				{
+					fencerNames = field.split("-");
+
+					match = fencerNames[0].equals(fencerName)||fencerNames[1].equals(fencerName);
+					System.out.println(fencerNames[0]);
+					System.out.println(fencerName);
+					System.out.println(match);
+
+					if(match)
+					{
+						String winner = searchAndReturnData(RecordArr[2],3,0);
+						String loser = searchAndReturnData(RecordArr[3],3,0);
+						listOfFights[i][0] = winner;
+						listOfFights[i][1] = RecordArr[4];
+						listOfFights[i][2] = loser;
+						listOfFights[i][3] = RecordArr[5];
+						listOfFights[i][4] = RecordArr[7];
+						listOfFights[i][5] = RecordArr[6];
+					}
+				}
+
+				
+			}
 		}
 
-		return listOfFights;
-		
+			return listOfFights;
+			
 	}
 
 	/*
